@@ -1,34 +1,100 @@
-import { useState, useEffect } from 'react';
-import { getTasks, updateStatus } from '../../api';
+import { getTasks, updateStatus, getProjects, createTask, updateTask, deleteTask, getUsers } from '../../api';
 import { useAuth } from '../../context/AuthContext';
 import Layout from '../../components/Layout';
-import { FiCheckSquare, FiCalendar, FiUser, FiFlag, FiLayers } from 'react-icons/fi';
+import {
+    FiCheckSquare, FiCalendar, FiUser, FiFlag, FiLayers,
+    FiPlus, FiX, FiEdit2, FiTrash2
+} from 'react-icons/fi';
 
 const TasksPage = () => {
     const { isAdmin, user } = useAuth();
     const [tasks, setTasks] = useState([]);
+    const [projects, setProjects] = useState([]);
+    const [allUsers, setAllUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
 
-    const fetchTasks = async () => {
+    // Modal states
+    const [taskModal, setTaskModal] = useState(false);
+    const [editTask, setEditTask] = useState(null);
+    const [taskForm, setTaskForm] = useState({
+        title: '', description: '', priority: 'Medium', deadline: '',
+        assignedTo: '', projectId: ''
+    });
+    const [saving, setSaving] = useState(false);
+
+    const fetchData = async () => {
         try {
-            const res = await getTasks();
-            setTasks(res.data);
+            const [tasksRes, projectsRes, usersRes] = await Promise.all([
+                getTasks(),
+                isAdmin ? getProjects() : Promise.resolve({ data: [] }),
+                isAdmin ? getUsers() : Promise.resolve({ data: [] })
+            ]);
+            setTasks(tasksRes.data);
+            setProjects(projectsRes.data);
+            setAllUsers(usersRes.data.filter(u => u.role === 'member'));
         } catch (err) {
-            setError('Failed to fetch tasks.');
+            setError('Failed to fetch data.');
         } finally {
             setLoading(false);
         }
     };
 
     useEffect(() => {
-        fetchTasks();
+        fetchData();
     }, []);
+
+    const handleTaskSubmit = async (e) => {
+        e.preventDefault();
+        setSaving(true);
+        try {
+            if (editTask) {
+                await updateTask(editTask.id, taskForm);
+            } else {
+                await createTask(taskForm);
+            }
+            setTaskModal(false);
+            fetchData();
+        } catch (err) {
+            alert(err.response?.data?.message || 'Failed to save task.');
+        } finally {
+            setSaving(false);
+        }
+    };
+
+    const handleTaskDelete = async (id) => {
+        if (!window.confirm('Delete this task?')) return;
+        try {
+            await deleteTask(id);
+            fetchData();
+        } catch (err) {
+            alert('Delete failed.');
+        }
+    };
+
+    const openCreateTask = () => {
+        setEditTask(null);
+        setTaskForm({ title: '', description: '', priority: 'Medium', deadline: '', assignedTo: '', projectId: '' });
+        setTaskModal(true);
+    };
+
+    const openEditTask = (task) => {
+        setEditTask(task);
+        setTaskForm({
+            title: task.title,
+            description: task.description || '',
+            priority: task.priority,
+            deadline: task.deadline || '',
+            assignedTo: task.assignedTo || '',
+            projectId: task.projectId
+        });
+        setTaskModal(true);
+    };
 
     const handleStatusChange = async (taskId, newStatus) => {
         try {
             await updateStatus(taskId, { status: newStatus });
-            fetchTasks(); // Refresh to update list
+            fetchData();
         } catch (err) {
             alert('Status update failed.');
         }
@@ -43,6 +109,11 @@ const TasksPage = () => {
                         {isAdmin ? 'Monitor status and progress across all projects' : 'View and update your personal task list'}
                     </p>
                 </div>
+                {isAdmin && (
+                    <button className="btn btn-primary" onClick={openCreateTask}>
+                        <FiPlus /> New Task
+                    </button>
+                )}
             </div>
 
             {loading ? (
@@ -65,6 +136,7 @@ const TasksPage = () => {
                                     <th>Priority</th>
                                     <th>Status</th>
                                     <th>Deadline</th>
+                                    {isAdmin && <th>Actions</th>}
                                 </tr>
                             </thead>
                             <tbody>
@@ -104,10 +176,93 @@ const TasksPage = () => {
                                                 <FiCalendar size={14} /> {task.deadline || 'No deadline'}
                                             </div>
                                         </td>
+                                        {isAdmin && (
+                                            <td>
+                                                <div style={{ display: 'flex', gap: '8px' }}>
+                                                    <button className="btn btn-outline btn-sm" onClick={() => openEditTask(task)} title="Edit">
+                                                        <FiEdit2 size={12} />
+                                                    </button>
+                                                    <button className="btn btn-danger btn-sm" onClick={() => handleTaskDelete(task.id)} title="Delete">
+                                                        <FiTrash2 size={12} />
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        )}
                                     </tr>
                                 ))}
                             </tbody>
                         </table>
+                    </div>
+                </div>
+            )}
+
+            {/* Task Modal */}
+            {taskModal && (
+                <div className="modal-overlay" onClick={() => setTaskModal(false)}>
+                    <div className="modal" onClick={(e) => e.stopPropagation()}>
+                        <div className="modal-header">
+                            <h2 className="modal-title">{editTask ? 'Edit Task' : 'Create New Task'}</h2>
+                            <button className="modal-close" onClick={() => setTaskModal(false)}><FiX /></button>
+                        </div>
+                        <form onSubmit={handleTaskSubmit}>
+                            <div className="form-group">
+                                <label className="form-label">Task Title *</label>
+                                <input className="form-input" placeholder="What needs to be done?" value={taskForm.title}
+                                    onChange={(e) => setTaskForm({ ...taskForm, title: e.target.value })} required />
+                            </div>
+
+                            {!editTask && (
+                                <div className="form-group">
+                                    <label className="form-label">Project *</label>
+                                    <select className="form-input" value={taskForm.projectId}
+                                        onChange={(e) => setTaskForm({ ...taskForm, projectId: e.target.value })} required>
+                                        <option value="">Select Project</option>
+                                        {projects.map(p => <option key={p.id} value={p.id}>{p.title}</option>)}
+                                    </select>
+                                </div>
+                            )}
+
+                            <div className="form-group">
+                                <label className="form-label">Description</label>
+                                <textarea className="form-input" style={{ minHeight: '80px', paddingTop: '8px' }} placeholder="Add details..." value={taskForm.description}
+                                    onChange={(e) => setTaskForm({ ...taskForm, description: e.target.value })} />
+                            </div>
+
+                            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+                                <div className="form-group">
+                                    <label className="form-label">Priority</label>
+                                    <select className="form-input" value={taskForm.priority}
+                                        onChange={(e) => setTaskForm({ ...taskForm, priority: e.target.value })}>
+                                        <option value="Low">Low</option>
+                                        <option value="Medium">Medium</option>
+                                        <option value="High">High</option>
+                                    </select>
+                                </div>
+                                <div className="form-group">
+                                    <label className="form-label">Deadline</label>
+                                    <input type="date" className="form-input" value={taskForm.deadline}
+                                        onChange={(e) => setTaskForm({ ...taskForm, deadline: e.target.value })} />
+                                </div>
+                            </div>
+
+                            <div className="form-group">
+                                <label className="form-label">Assign To</label>
+                                <select className="form-input" value={taskForm.assignedTo}
+                                    onChange={(e) => setTaskForm({ ...taskForm, assignedTo: e.target.value })}>
+                                    <option value="">Unassigned</option>
+                                    {allUsers.map((m) => (
+                                        <option key={m.id} value={m.id}>{m.name} ({m.email})</option>
+                                    ))}
+                                </select>
+                            </div>
+
+                            <div className="modal-footer">
+                                <button type="button" className="btn btn-outline" onClick={() => setTaskModal(false)}>Cancel</button>
+                                <button type="submit" className="btn btn-primary" disabled={saving}>
+                                    {saving ? 'Saving...' : editTask ? 'Update Task' : 'Create Task'}
+                                </button>
+                            </div>
+                        </form>
                     </div>
                 </div>
             )}

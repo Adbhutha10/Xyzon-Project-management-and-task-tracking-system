@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const auth = require('../middleware/auth');
 const adminOnly = require('../middleware/adminOnly');
-const { Task, User, Project } = require('../models');
+const { Task, User, Project, ProjectMember } = require('../models');
 
 // GET /api/tasks — Admin: all tasks, Member: own tasks
 router.get('/', auth, async (req, res) => {
@@ -61,12 +61,9 @@ router.post('/', auth, adminOnly, async (req, res) => {
             return res.status(404).json({ message: 'Project not found.' });
         }
 
-        // 2. If assignedTo is provided, verify user is a member of the project
+        // 2. If assignedTo is provided, ensure user is a member of the project
         if (assignedTo) {
-            const isMember = await ProjectMember.findOne({ where: { projectId, userId: assignedTo } });
-            if (!isMember) {
-                return res.status(400).json({ message: 'Assigned user is not a member of this project.' });
-            }
+            await ProjectMember.findOrCreate({ where: { projectId, userId: assignedTo } });
         }
 
         const task = await Task.create({
@@ -89,6 +86,12 @@ router.put('/:id', auth, adminOnly, async (req, res) => {
         if (!task) return res.status(404).json({ message: 'Task not found.' });
 
         const { title, description, priority, status, deadline, assignedTo } = req.body;
+
+        // Ensure new assignee is a member of the project
+        if (assignedTo) {
+            await ProjectMember.findOrCreate({ where: { projectId: task.projectId, userId: assignedTo } });
+        }
+
         await task.update({ title, description, priority, status, deadline, assignedTo });
         return res.status(200).json({ message: 'Task updated.', task });
     } catch (error) {

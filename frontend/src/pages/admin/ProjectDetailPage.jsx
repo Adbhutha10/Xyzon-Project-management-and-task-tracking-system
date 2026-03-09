@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getProject, createTask, updateTask, deleteTask, updateStatus } from '../../api';
+import { getProject, createTask, updateTask, deleteTask, updateStatus, getUsers } from '../../api';
 import { useAuth } from '../../context/AuthContext';
 import Layout from '../../components/Layout';
 import {
@@ -14,6 +14,7 @@ const ProjectDetailPage = () => {
     const navigate = useNavigate();
 
     const [project, setProject] = useState(null);
+    const [allUsers, setAllUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [taskModal, setTaskModal] = useState(false);
     const [editTask, setEditTask] = useState(null);
@@ -28,13 +29,26 @@ const ProjectDetailPage = () => {
         } catch (err) {
             console.error(err);
             setError('Failed to load project details.');
-        } finally {
-            setLoading(false);
+        }
+    };
+
+    const fetchAllUsers = async () => {
+        if (!isAdmin) return;
+        try {
+            const res = await getUsers();
+            setAllUsers(res.data.filter(u => u.role === 'member'));
+        } catch (err) {
+            console.error('Failed to fetch users:', err);
         }
     };
 
     useEffect(() => {
-        fetchProject();
+        const loadData = async () => {
+            setLoading(true);
+            await Promise.all([fetchProject(), fetchAllUsers()]);
+            setLoading(false);
+        };
+        loadData();
     }, [id]);
 
     const handleTaskSubmit = async (e) => {
@@ -292,8 +306,8 @@ const ProjectDetailPage = () => {
                                 <select className="form-input" value={taskForm.assignedTo}
                                     onChange={(e) => setTaskForm({ ...taskForm, assignedTo: e.target.value })}>
                                     <option value="">Unassigned</option>
-                                    {project.members?.map((m) => (
-                                        <option key={m.id} value={m.id}>{m.name}</option>
+                                    {allUsers.map((m) => (
+                                        <option key={m.id} value={m.id}>{m.name} ({m.email})</option>
                                     ))}
                                 </select>
                             </div>
