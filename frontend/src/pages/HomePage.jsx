@@ -106,7 +106,7 @@ const HomePage = () => {
             <nav className="hp-nav">
                 <div className="hp-nav-inner">
                     <div className="home-logo">
-                        <img src="/xyzon-logo.jpeg" alt="Planora" style={{ height: '36px', width: '100px', borderRadius: '8px', objectFit: 'cover' }} />
+                        <img src="/xyzon-logo.jpeg" alt="Planora" style={{ height: '36px', width: 'auto', objectFit: 'contain' }} />
                         <span className="home-logo-text">Planora</span>
                     </div>
                     <div className="hp-nav-links">
@@ -302,7 +302,7 @@ const HomePage = () => {
             {/* ── Footer ── */}
             <footer className="home-footer">
                 <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                    <img src="/xyzon-logo.jpeg" alt="Planora" style={{ height: '20px', width: '55px', borderRadius: '4px', objectFit: 'cover' }} />
+                    <img src="/xyzon-logo.jpeg" alt="Planora" style={{ height: '22px', width: 'auto', objectFit: 'contain' }} />
                     <span style={{ fontWeight: 700, color: '#475569', fontSize: '0.88rem' }}>Planora</span>
                 </div>
                 <p>© 2026 Planora. Built by Beere Adbhutha.</p>

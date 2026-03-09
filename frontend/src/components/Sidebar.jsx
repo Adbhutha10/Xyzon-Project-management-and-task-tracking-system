@@ -32,7 +32,7 @@ const Sidebar = () => {
             {/* Brand */}
             <div className="sidebar-brand">
                 <div className="brand-icon">
-                    <img src="/xyzon-logo.jpeg" alt="Planora" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px' }} />
+                    <img src="/xyzon-logo.jpeg" alt="Planora" style={{ width: 'auto', height: '100%', objectFit: 'contain', borderRadius: '6px' }} />
                 </div>
                 <div>
                     <div className="brand-name">Planora</div>
