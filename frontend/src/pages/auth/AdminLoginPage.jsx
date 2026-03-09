@@ -115,12 +115,6 @@ const AdminLoginPage = () => {
                         </button>
                     </form>
 
-                    <p className="auth-zoho-social-label">Verify using</p>
-                    <div className="auth-zoho-social-row">
-                        <div className="auth-zoho-social-btn"><FaMicrosoft color="#00a1f1" /></div>
-                        <div className="auth-zoho-social-btn"><FiShield color="#4338CA" /></div>
-                    </div>
-
                     <p className="auth-zoho-footer-link">
                         Not an admin? <Link to="/login">Member Login</Link>
                     </p>

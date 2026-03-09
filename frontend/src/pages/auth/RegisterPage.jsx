@@ -136,16 +136,6 @@ const RegisterPage = () => {
                         </button>
                     </form>
 
-                    <p className="auth-zoho-social-label">Sign up using</p>
-                    <div className="auth-zoho-social-row">
-                        <div className="auth-zoho-social-btn" title="Google"><FaGoogle color="#ea4335" /></div>
-                        <div className="auth-zoho-social-btn" title="Facebook"><FaFacebookF color="#1877f2" /></div>
-                        <div className="auth-zoho-social-btn" title="LinkedIn"><FaLinkedinIn color="#0a66c2" /></div>
-                        <div className="auth-zoho-social-btn" title="GitHub"><FaGithub color="#333" /></div>
-                        <div className="auth-zoho-social-btn" title="Apple"><FaApple color="#000" /></div>
-                        <div className="auth-zoho-social-btn" title="Microsoft"><FaMicrosoft color="#00a1f1" /></div>
-                    </div>
-
                     <p className="auth-zoho-footer-link">
                         Already have a Planora account? <Link to="/login">Sign in</Link>
                     </p>
