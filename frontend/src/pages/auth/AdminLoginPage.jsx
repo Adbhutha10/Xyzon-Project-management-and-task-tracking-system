@@ -98,7 +98,7 @@ const AdminLoginPage = () => {
                         <p className="auth-zoho-subtitle">Authorized access to Planora control center</p>
                     </div>
 
-                    {error && <div className="alert alert-error" style={{ marginBottom: '20px' }}>{error}</div>}
+                    {error && <div className="alert alert-error" style={{ marginBottom: '10px' }}>{error}</div>}
 
                     <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column' }}>
                         <input

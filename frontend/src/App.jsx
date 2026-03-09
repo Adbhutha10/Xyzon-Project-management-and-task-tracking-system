@@ -11,6 +11,7 @@ import RegisterPage from './pages/auth/RegisterPage';
 // Protected pages
 import DashboardPage from './pages/admin/DashboardPage';
 import ProjectsPage from './pages/admin/ProjectsPage';
+import ProjectDetailPage from './pages/admin/ProjectDetailPage';
 
 function App() {
   return (
@@ -29,6 +30,9 @@ function App() {
           } />
           <Route path="/projects" element={
             <ProtectedRoute><ProjectsPage /></ProtectedRoute>
+          } />
+          <Route path="/projects/:id" element={
+            <ProtectedRoute><ProjectDetailPage /></ProtectedRoute>
           } />
 
           {/* Catch-all */}

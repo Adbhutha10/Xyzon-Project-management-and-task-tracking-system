@@ -55,6 +55,20 @@ router.post('/', auth, adminOnly, async (req, res) => {
             return res.status(400).json({ message: 'Title and projectId are required.' });
         }
 
+        // 1. Verify project exists
+        const project = await Project.findByPk(projectId);
+        if (!project) {
+            return res.status(404).json({ message: 'Project not found.' });
+        }
+
+        // 2. If assignedTo is provided, verify user is a member of the project
+        if (assignedTo) {
+            const isMember = await ProjectMember.findOne({ where: { projectId, userId: assignedTo } });
+            if (!isMember) {
+                return res.status(400).json({ message: 'Assigned user is not a member of this project.' });
+            }
+        }
+
         const task = await Task.create({
             title, description, priority, deadline,
             projectId, assignedTo, createdBy: req.user.id,
