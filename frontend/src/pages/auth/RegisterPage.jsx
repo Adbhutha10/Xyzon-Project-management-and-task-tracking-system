@@ -2,6 +2,17 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { registerUser } from '../../api';
 import { useAuth } from '../../context/AuthContext';
+import {
+    FiCheckSquare, FiBarChart2, FiUsers, FiShield,
+} from 'react-icons/fi';
+import { HiOutlineSparkles } from 'react-icons/hi2';
+
+const benefits = [
+    { Icon: HiOutlineSparkles, text: 'Beautiful, intuitive project dashboard' },
+    { Icon: FiCheckSquare, text: 'Stay on top of every deadline' },
+    { Icon: FiUsers, text: 'Collaborate seamlessly with your team' },
+    { Icon: FiBarChart2, text: 'Track your personal productivity' },
+];
 
 const RegisterPage = () => {
     const { login } = useAuth();
@@ -34,11 +45,68 @@ const RegisterPage = () => {
     const getFieldError = (field) => fieldErrors.find((e) => e.field === field)?.message;
 
     return (
-        <div className="auth-page">
-            <div className="auth-left">
-                <h2>Join your team on Planora.</h2>
-                <p>Get assigned tasks, track your progress, and collaborate with your team effortlessly.</p>
+        <div className="auth-page auth-split">
+            {/* ── Left panel (60%) ─────────────────────── */}
+            <div className="auth-left auth-left-rich">
+                {/* Brand */}
+                <div className="auth-brand">
+                    <img src="/xyzon-logo.jpeg" alt="Planora"
+                        style={{ height: '40px', width: 'auto', objectFit: 'contain', borderRadius: '8px' }} />
+                    <span className="auth-brand-name">Planora</span>
+                </div>
+
+                {/* Headline */}
+                <div className="auth-left-hero">
+                    <h2 className="auth-left-h2">
+                        Build amazing things with your team.
+                    </h2>
+                    <p className="auth-left-sub">
+                        Join thousands of teams who use Planora to stay organized,
+                        focused, and productive. Your new productivity hub awaits.
+                    </p>
+                </div>
+
+                {/* Benefits list */}
+                <ul className="auth-feature-list">
+                    {benefits.map(({ Icon, text }) => (
+                        <li key={text} className="auth-feature-item">
+                            <span className="auth-feature-icon"><Icon size={16} /></span>
+                            {text}
+                        </li>
+                    ))}
+                </ul>
+
+                {/* Stats Row */}
+                <div className="auth-stats-row">
+                    {[['100%', 'Privacy'], ['24/7', 'Support'], ['∞', 'Tasks']].map(([v, l]) => (
+                        <div className="auth-stat-box" key={l}>
+                            <span className="auth-stat-val">{v}</span>
+                            <span className="auth-stat-lbl">{l}</span>
+                        </div>
+                    ))}
+                </div>
+
+                {/* Testimonial */}
+                <div className="auth-testimonial">
+                    <p className="auth-testi-quote">
+                        "We switched to Planora and never looked back. It's the cleanest project management tool we've used."
+                    </p>
+                    <div className="auth-testi-author">
+                        <div className="auth-testi-avatar">P</div>
+                        <div>
+                            <div className="auth-testi-name">Priya M.</div>
+                            <div className="auth-testi-role">Project Manager</div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Security Note */}
+                <div className="auth-security-note">
+                    <FiShield size={13} /> Secure, encrypted and role-protected
+                </div>
             </div>
+
+            {/* ── Right panel (40%) ─────────────────────── */}
             <div className="auth-right">
                 <div className="auth-card">
                     <div className="auth-logo-wrap">

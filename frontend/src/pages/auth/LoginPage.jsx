@@ -2,6 +2,17 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { loginUser } from '../../api';
 import { useAuth } from '../../context/AuthContext';
+import {
+    FiCheckCircle, FiBarChart2, FiUsers, FiShield,
+} from 'react-icons/fi';
+import { MdOutlineTrackChanges } from 'react-icons/md';
+
+const features = [
+    { Icon: FiCheckCircle, text: 'Assign tasks with priorities & deadlines' },
+    { Icon: FiBarChart2, text: 'Real-time progress dashboards' },
+    { Icon: FiUsers, text: 'Role-based access for teams' },
+    { Icon: MdOutlineTrackChanges, text: 'Track completion across all projects' },
+];
 
 const LoginPage = () => {
     const { login } = useAuth();
@@ -28,11 +39,71 @@ const LoginPage = () => {
     };
 
     return (
-        <div className="auth-page">
-            <div className="auth-left">
-                <h2>Planora — Project Management & Task Tracking</h2>
-                <p>Assign tasks, track progress, and keep every project on time — all in one place.</p>
+        <div className="auth-page auth-split">
+
+            {/* ── Left panel (60%) ─────────────────────── */}
+            <div className="auth-left auth-left-rich">
+
+                {/* Brand */}
+                <div className="auth-brand">
+                    <img src="/xyzon-logo.jpeg" alt="Planora"
+                        style={{ height: '40px', width: 'auto', objectFit: 'contain', borderRadius: '8px' }} />
+                    <span className="auth-brand-name">Planora</span>
+                </div>
+
+                {/* Headline */}
+                <div className="auth-left-hero">
+                    <h2 className="auth-left-h2">
+                        The smarter way to manage your team.
+                    </h2>
+                    <p className="auth-left-sub">
+                        One dashboard to plan projects, assign tasks, and watch your team
+                        hit every deadline — no spreadsheets needed.
+                    </p>
+                </div>
+
+                {/* Feature list */}
+                <ul className="auth-feature-list">
+                    {features.map(({ Icon, text }) => (
+                        <li key={text} className="auth-feature-item">
+                            <span className="auth-feature-icon"><Icon size={16} /></span>
+                            {text}
+                        </li>
+                    ))}
+                </ul>
+
+                {/* Stats row */}
+                <div className="auth-stats-row">
+                    {[['100%', 'Role-based access'], ['3', 'Priority levels'], ['∞', 'Projects']].map(([v, l]) => (
+                        <div className="auth-stat-box" key={l}>
+                            <span className="auth-stat-val">{v}</span>
+                            <span className="auth-stat-lbl">{l}</span>
+                        </div>
+                    ))}
+                </div>
+
+                {/* Testimonial */}
+                <div className="auth-testimonial">
+                    <p className="auth-testi-quote">
+                        "Planora gave us complete visibility over every task — our delivery time improved significantly."
+                    </p>
+                    <div className="auth-testi-author">
+                        <div className="auth-testi-avatar">R</div>
+                        <div>
+                            <div className="auth-testi-name">Ravi S.</div>
+                            <div className="auth-testi-role">Engineering Lead</div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Security note */}
+                <div className="auth-security-note">
+                    <FiShield size={13} />
+                    Secured with JWT authentication &amp; role-based access control
+                </div>
             </div>
+
+            {/* ── Right panel (40%) ─────────────────────── */}
             <div className="auth-right">
                 <div className="auth-card">
                     <div className="auth-logo-wrap">
@@ -68,6 +139,7 @@ const LoginPage = () => {
                     </div>
                 </div>
             </div>
+
         </div>
     );
 };

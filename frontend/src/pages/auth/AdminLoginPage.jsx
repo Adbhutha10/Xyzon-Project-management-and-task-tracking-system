@@ -2,6 +2,16 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { loginUser } from '../../api';
 import { useAuth } from '../../context/AuthContext';
+import {
+    FiShield, FiLayout, FiUsers, FiBarChart2,
+} from 'react-icons/fi';
+
+const adminFeatures = [
+    { Icon: FiShield, text: 'Centralized admin control panel' },
+    { Icon: FiLayout, text: 'Manage all projects and task flows' },
+    { Icon: FiUsers, text: 'Oversee team members and permissions' },
+    { Icon: FiBarChart2, text: 'Full visibility on team productivity' },
+];
 
 const AdminLoginPage = () => {
     const { login } = useAuth();
@@ -33,11 +43,54 @@ const AdminLoginPage = () => {
     };
 
     return (
-        <div className="auth-page">
-            <div className="auth-left" style={{ background: 'linear-gradient(145deg, #1E1E2E 0%, #312E81 100%)' }}>
-                <h2>Admin Control Centre</h2>
-                <p>Manage projects, assign tasks, monitor team productivity and drive results with full oversight.</p>
+        <div className="auth-page auth-split">
+            {/* ── Left panel (60%) ─────────────────────── */}
+            <div className="auth-left auth-left-rich">
+                {/* Brand */}
+                <div className="auth-brand">
+                    <img src="/xyzon-logo.jpeg" alt="Planora"
+                        style={{ height: '40px', width: 'auto', objectFit: 'contain', borderRadius: '8px' }} />
+                    <span className="auth-brand-name">Planora Admin</span>
+                </div>
+
+                {/* Headline */}
+                <div className="auth-left-hero">
+                    <h2 className="auth-left-h2">
+                        The power to lead, <br /> simplified.
+                    </h2>
+                    <p className="auth-left-sub">
+                        Monitor workloads, track milestones, and ensure every project
+                        stays on track with the Planora Admin Control Centre.
+                    </p>
+                </div>
+
+                {/* Feature list */}
+                <ul className="auth-feature-list">
+                    {adminFeatures.map(({ Icon, text }) => (
+                        <li key={text} className="auth-feature-item">
+                            <span className="auth-feature-icon"><Icon size={16} /></span>
+                            {text}
+                        </li>
+                    ))}
+                </ul>
+
+                {/* Stats Row */}
+                <div className="auth-stats-row">
+                    {[['100%', 'Control'], ['Live', 'Updates'], ['Secured', 'SSL']].map(([v, l]) => (
+                        <div className="auth-stat-box" key={l}>
+                            <span className="auth-stat-val">{v}</span>
+                            <span className="auth-stat-lbl">{l}</span>
+                        </div>
+                    ))}
+                </div>
+
+                {/* Security Note */}
+                <div className="auth-security-note">
+                    <FiShield size={13} /> Restricted Access — Authorized personnel only
+                </div>
             </div>
+
+            {/* ── Right panel (40%) ─────────────────────── */}
             <div className="auth-right">
                 <div className="auth-card">
                     <div className="auth-logo-wrap">
