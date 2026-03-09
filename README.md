@@ -1,13 +1,13 @@
 # Planora — Project Management & Task Tracking System
 
-Planora is a professional, full-stack **Project Management Web Application** designed for teams to stay organized and hit milestones on time. Inspired by the sleek efficiency of Zoho Projects, Planora offers a premium "Elegant Light Theme" and a robust functional core.
+Planora is a professional, full-stack **Project Management Web Application** designed for teams to stay organized and hit milestones on time. It offers a premium "Elegant Light Theme" with enterprise-grade UI and a robust functional core.
 
 ---
 
 ## ✨ Key Features
 
 ### 🏢 Corporate-Grade UI/UX
-- **Zoho-Inspired Auth**: Centered card layout with auto-scrolling feature showcases and high-quality geometric background.
+- **Modern Auth UI**: Centered card layout with auto-scrolling feature showcases and high-quality geometric background.
 - **Elegant Light Theme**: A curated Indigo/Cyan color palette with modern typography (`Inter` & `Plus Jakarta Sans`).
 - **Polished Sidebar**: Redesigned branding section with vertical logo alignment for a premium feel.
 - **Responsive Layout**: Fully optimized for Desktop, Tablet, and Mobile screens.
@@ -110,7 +110,44 @@ cd "Xyzon assignment - 2"
 
 ---
 
-## 🔑 Default Admin Credentials
+## � Advancements in the Project (From My End)
+
+Beyond the core requirements, the following enhancements were independently designed and implemented to elevate the product experience:
+
+### 🔍 Smart Search & Real-time Filtering
+- Implemented a **unified Search Bar** on both Projects and Tasks pages with live results counting.
+- Added **multi-criteria filtering** on the Tasks page (filter by Priority and Status simultaneously).
+- Client-side filtering ensures **instant UI updates** without extra API calls, providing a snappy, desktop-like experience.
+
+### 🌓 Global Dark Mode
+- Added a **system-wide Dark Mode toggle** in the sidebar footer (sun/moon icon).
+- Theme preference is **persisted in `localStorage`** so it survives page refreshes.
+- All UI elements — sidebar, cards, modals, tables, forms — fully respect the active theme via CSS custom properties (`[data-theme='dark']`).
+
+### ✨ Smooth Page Transitions
+- Integrated **`framer-motion`** to deliver a professional **fade + slide** animation on every route change.
+- Uses `AnimatePresence` with `mode="wait"` for clean enter/exit sequencing.
+
+### 🎉 Confetti on Task Completion
+- Installed **`canvas-confetti`** to trigger a colorful particle burst whenever a task is marked **"Completed"**.
+- Fires from both the Tasks Hub and the Project Detail page for a satisfying, rewarding experience.
+
+### 🃏 Interactive Card Hover Effects
+- All project and stat cards feature a **lift + shadow elevation** on hover.
+- Project cards display a **gradient left-edge accent** (indigo → cyan) on hover for visual depth.
+
+### 🌐 Global Task Assignment
+- Admins can assign tasks to **any registered member** in the system — not just those already in a project.
+- Backend uses `findOrCreate` to **automatically add the member to the project** on assignment, removing manual overhead.
+
+### 🔔 In-App Notifications
+- Implemented a real-time **Toast Notification System** using `react-hot-toast`.
+- Team Members receive **instant visual alerts** the moment a new task is assigned to them.
+- Features a robust backend model to track and persist notifications, with a polling mechanism to ensure delivery.
+
+---
+
+## �🔑 Default Admin Credentials
 For testing and initial setup, use the following administrator account:
 - **Email**: `admin@pm.com`
 - **Password**: `Admin@123`

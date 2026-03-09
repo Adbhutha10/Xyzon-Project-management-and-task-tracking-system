@@ -18,6 +18,7 @@ app.use('/api/users', require('./routes/users'));
 app.use('/api/projects', require('./routes/projects'));
 app.use('/api/tasks', require('./routes/tasks'));
 app.use('/api/dashboard', require('./routes/dashboard'));
+app.use('/api/notifications', require('./routes/notifications'));
 
 // ─── Health check ────────────────────────────────────────────────────
 app.get('/', (req, res) => {
@@ -30,6 +31,7 @@ app.get('/', (req, res) => {
             projects: '/api/projects',
             tasks: '/api/tasks',
             dashboard: '/api/dashboard',
+            notifications: '/api/notifications',
         },
     });
 });

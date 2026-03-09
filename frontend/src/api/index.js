@@ -53,4 +53,8 @@ export const deleteUser = (id) => api.delete(`/users/${id}`);
 // ── Dashboard ─────────────────────────────────────────────────────────
 export const getDashboard = () => api.get('/dashboard');
 
+// ── Notifications ────────────────────────────────────────────────────
+export const getNotifications = () => api.get('/notifications');
+export const markNotificationsRead = () => api.put('/notifications/read-all');
+
 export default api;

@@ -1,8 +1,9 @@
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import {
-    FiGrid, FiFolder, FiCheckSquare, FiUsers, FiLogOut,
+    FiGrid, FiFolder, FiCheckSquare, FiUsers, FiLogOut, FiSun, FiMoon,
 } from 'react-icons/fi';
+import { useTheme } from '../context/ThemeContext';
 
 const adminLinks = [
     { to: '/dashboard', Icon: FiGrid, label: 'Dashboard' },
@@ -19,6 +20,7 @@ const memberLinks = [
 
 const Sidebar = () => {
     const { user, isAdmin, logout } = useAuth();
+    const { isDarkMode, toggleTheme } = useTheme();
     const navigate = useNavigate();
     const links = isAdmin ? adminLinks : memberLinks;
 
@@ -66,8 +68,12 @@ const Sidebar = () => {
                 ))}
             </nav>
 
-            {/* Logout */}
+            {/* Footer */}
             <div className="sidebar-footer">
+                <button className="theme-toggle-btn" onClick={toggleTheme} title="Toggle Theme">
+                    {isDarkMode ? <FiSun size={16} /> : <FiMoon size={16} />}
+                    <span>{isDarkMode ? 'Light Mode' : 'Dark Mode'}</span>
+                </button>
                 <button className="sidebar-logout" onClick={handleLogout}>
                     <FiLogOut size={15} /> Sign Out
                 </button>

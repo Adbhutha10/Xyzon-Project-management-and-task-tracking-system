@@ -3,6 +3,7 @@ const User = require('./User');
 const Project = require('./Project');
 const Task = require('./Task');
 const ProjectMember = require('./ProjectMember');
+const Notification = require('./Notification');
 
 // User creates Projects
 User.hasMany(Project, { foreignKey: 'createdBy', as: 'createdProjects' });
@@ -24,4 +25,8 @@ Task.belongsTo(User, { foreignKey: 'assignedTo', as: 'assignee' });
 User.hasMany(Task, { foreignKey: 'createdBy', as: 'createdTasks' });
 Task.belongsTo(User, { foreignKey: 'createdBy', as: 'taskCreator' });
 
-module.exports = { sequelize, User, Project, Task, ProjectMember };
+// Notifications
+User.hasMany(Notification, { foreignKey: 'userId', as: 'notifications' });
+Notification.belongsTo(User, { foreignKey: 'userId', as: 'user' });
+
+module.exports = { sequelize, User, Project, Task, ProjectMember, Notification };

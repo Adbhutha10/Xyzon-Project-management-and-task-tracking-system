@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { getProjects, createProject, updateProject, deleteProject, getUsers, addProjectMembers } from '../../api';
 import { useAuth } from '../../context/AuthContext';
 import Layout from '../../components/Layout';
-import { FiPlus, FiEdit2, FiTrash2, FiFolder, FiUsers, FiCalendar, FiX } from 'react-icons/fi';
+import { FiPlus, FiEdit2, FiTrash2, FiFolder, FiUsers, FiCalendar, FiX, FiSearch } from 'react-icons/fi';
 
 const ProjectsPage = () => {
     const { isAdmin } = useAuth();
@@ -16,6 +16,7 @@ const ProjectsPage = () => {
     const [form, setForm] = useState({ title: '', description: '', deadline: '', memberIds: [] });
     const [error, setError] = useState('');
     const [saving, setSaving] = useState(false);
+    const [search, setSearch] = useState('');
 
     const fetchProjects = () => {
         setLoading(true);
@@ -98,6 +99,24 @@ const ProjectsPage = () => {
                 {isAdmin && <button className="btn btn-primary" onClick={openCreate}><FiPlus /> New Project</button>}
             </div>
 
+            {/* Search Bar */}
+            <div className="search-filter-bar">
+                <div className="search-input-wrap">
+                    <FiSearch size={15} className="search-icon" />
+                    <input
+                        className="search-input"
+                        placeholder="Search projects by name..."
+                        value={search}
+                        onChange={(e) => setSearch(e.target.value)}
+                    />
+                </div>
+                {search && (
+                    <span className="search-results-count">
+                        {projects.filter(p => p.title.toLowerCase().includes(search.toLowerCase())).length} result(s)
+                    </span>
+                )}
+            </div>
+
             {loading ? (
                 <div className="spinner-overlay" style={{ position: 'relative', height: '40vh' }}><div className="spinner" /></div>
             ) : projects.length === 0 ? (
@@ -107,38 +126,47 @@ const ProjectsPage = () => {
                     <p>{isAdmin ? 'Create your first project to get started.' : 'Ask your admin to assign you to a project.'}</p>
                     {isAdmin && <button className="btn btn-primary" style={{ marginTop: '16px' }} onClick={openCreate}><FiPlus /> Create Project</button>}
                 </div>
-            ) : (
-                <div className="projects-grid">
-                    {projects.map((proj) => (
-                        <div className="project-card" key={proj.id} onClick={() => navigate(`/projects/${proj.id}`)}>
-                            <div className="project-card-header">
-                                <h3 className="project-title">{proj.title}</h3>
-                                {isAdmin && (
-                                    <div className="project-actions" onClick={(e) => e.stopPropagation()}>
-                                        <button className="btn btn-outline btn-sm" onClick={(e) => openEdit(proj, e)}><FiEdit2 size={13} /></button>
-                                        <button className="btn btn-danger btn-sm" onClick={(e) => handleDelete(proj.id, e)}><FiTrash2 size={13} /></button>
+            ) : (() => {
+                const filtered = projects.filter(p => p.title.toLowerCase().includes(search.toLowerCase()));
+                return filtered.length === 0 ? (
+                    <div className="empty-state">
+                        <FiSearch size={32} style={{ opacity: 0.2, marginBottom: '12px' }} />
+                        <h3>No projects match "{search}"</h3>
+                        <p>Try a different search term.</p>
+                    </div>
+                ) : (
+                    <div className="projects-grid">
+                        {filtered.map((proj) => (
+                            <div className="project-card card" key={proj.id} onClick={() => navigate(`/projects/${proj.id}`)}>
+                                <div className="project-card-header">
+                                    <h3 className="project-title">{proj.title}</h3>
+                                    {isAdmin && (
+                                        <div className="project-actions" onClick={(e) => e.stopPropagation()}>
+                                            <button className="btn btn-outline btn-sm" onClick={(e) => openEdit(proj, e)}><FiEdit2 size={13} /></button>
+                                            <button className="btn btn-danger btn-sm" onClick={(e) => handleDelete(proj.id, e)}><FiTrash2 size={13} /></button>
+                                        </div>
+                                    )}
+                                </div>
+                                {proj.description && <p className="project-desc">{proj.description.slice(0, 100)}{proj.description.length > 100 ? '...' : ''}</p>}
+                                <div className="project-meta">
+                                    <span><FiFolder size={12} /> {taskCount(proj)} tasks</span>
+                                    <span><FiUsers size={12} /> {proj.members?.length ?? 0} members</span>
+                                    {proj.deadline && <span><FiCalendar size={12} /> {proj.deadline}</span>}
+                                </div>
+                                <div>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: '6px' }}>
+                                        <span>Progress</span>
+                                        <span style={{ color: 'var(--primary)', fontWeight: 600 }}>{progress(proj)}%</span>
                                     </div>
-                                )}
-                            </div>
-                            {proj.description && <p className="project-desc">{proj.description.slice(0, 100)}{proj.description.length > 100 ? '...' : ''}</p>}
-                            <div className="project-meta">
-                                <span><FiFolder size={12} /> {taskCount(proj)} tasks</span>
-                                <span><FiUsers size={12} /> {proj.members?.length ?? 0} members</span>
-                                {proj.deadline && <span><FiCalendar size={12} /> {proj.deadline}</span>}
-                            </div>
-                            <div>
-                                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: '6px' }}>
-                                    <span>Progress</span>
-                                    <span style={{ color: 'var(--primary)', fontWeight: 600 }}>{progress(proj)}%</span>
-                                </div>
-                                <div className="progress-bar-wrap">
-                                    <div className="progress-bar-fill" style={{ width: `${progress(proj)}%` }} />
+                                    <div className="progress-bar-wrap">
+                                        <div className="progress-bar-fill" style={{ width: `${progress(proj)}%` }} />
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    ))}
-                </div>
-            )}
+                        ))}
+                    </div>
+                );
+            })()}
 
             {/* Create / Edit Modal */}
             {showModal && (

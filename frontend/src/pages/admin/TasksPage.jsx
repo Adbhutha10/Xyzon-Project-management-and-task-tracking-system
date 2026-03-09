@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
+import confetti from 'canvas-confetti';
 import { getTasks, updateStatus, getProjects, createTask, updateTask, deleteTask, getUsers } from '../../api';
 import { useAuth } from '../../context/AuthContext';
 import Layout from '../../components/Layout';
 import {
     FiCheckSquare, FiCalendar, FiUser, FiFlag, FiLayers,
-    FiPlus, FiX, FiEdit2, FiTrash2
+    FiPlus, FiX, FiEdit2, FiTrash2, FiSearch
 } from 'react-icons/fi';
 
 const TasksPage = () => {
@@ -23,6 +24,9 @@ const TasksPage = () => {
         assignedTo: '', projectId: ''
     });
     const [saving, setSaving] = useState(false);
+    const [search, setSearch] = useState('');
+    const [filterPriority, setFilterPriority] = useState('');
+    const [filterStatus, setFilterStatus] = useState('');
 
     const fetchData = async () => {
         try {
@@ -92,12 +96,20 @@ const TasksPage = () => {
         setTaskModal(true);
     };
 
-    const handleStatusChange = async (taskId, newStatus) => {
+    const handleStatusUpdate = async (taskId, value) => {
         try {
-            await updateStatus(taskId, { status: newStatus });
+            await updateStatus(taskId, { status: value });
+            if (value === 'Completed') {
+                confetti({
+                    particleCount: 150,
+                    spread: 70,
+                    origin: { y: 0.6 },
+                    colors: ['#4F46E5', '#06B6D4', '#10B981']
+                });
+            }
             fetchData();
-        } catch (err) {
-            alert('Status update failed.');
+        } catch (error) {
+            console.error('Error updating status:', error);
         }
     };
 
@@ -117,6 +129,31 @@ const TasksPage = () => {
                 )}
             </div>
 
+            {/* Search & Filter Bar */}
+            <div className="search-filter-bar">
+                <div className="search-input-wrap">
+                    <FiSearch size={15} className="search-icon" />
+                    <input className="search-input" placeholder="Search tasks..." value={search} onChange={(e) => setSearch(e.target.value)} />
+                </div>
+                <select className="filter-select" value={filterPriority} onChange={(e) => setFilterPriority(e.target.value)}>
+                    <option value="">All Priorities</option>
+                    <option value="Low">Low</option>
+                    <option value="Medium">Medium</option>
+                    <option value="High">High</option>
+                </select>
+                <select className="filter-select" value={filterStatus} onChange={(e) => setFilterStatus(e.target.value)}>
+                    <option value="">All Statuses</option>
+                    <option value="Pending">Pending</option>
+                    <option value="In Progress">In Progress</option>
+                    <option value="Completed">Completed</option>
+                </select>
+                {(search || filterPriority || filterStatus) && (
+                    <button className="btn btn-outline btn-sm" onClick={() => { setSearch(''); setFilterPriority(''); setFilterStatus(''); }}>
+                        <FiX size={13} /> Clear
+                    </button>
+                )}
+            </div>
+
             {loading ? (
                 <div className="spinner-overlay" style={{ position: 'relative', height: '40vh' }}><div className="spinner" /></div>
             ) : tasks.length === 0 ? (
@@ -125,77 +162,96 @@ const TasksPage = () => {
                     <h3>No tasks found</h3>
                     <p>{isAdmin ? 'Tasks will appear here once created for projects.' : 'You have no tasks assigned to you.'}</p>
                 </div>
-            ) : (
-                <div className="tasks-container">
-                    <div className="table-wrap">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Task</th>
-                                    <th>Project</th>
-                                    {isAdmin && <th>Assigned To</th>}
-                                    <th>Priority</th>
-                                    <th>Status</th>
-                                    <th>Deadline</th>
-                                    {isAdmin && <th>Actions</th>}
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {tasks.map((task) => (
-                                    <tr key={task.id}>
-                                        <td style={{ fontWeight: 600 }}>{task.title}</td>
-                                        <td>
-                                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.85rem' }}>
-                                                <FiLayers size={14} color="var(--primary)" /> {task.project?.title || '—'}
-                                            </div>
-                                        </td>
-                                        {isAdmin && (
+            ) : (() => {
+                const filtered = tasks.filter(t => {
+                    const matchesSearch = t.title.toLowerCase().includes(search.toLowerCase());
+                    const matchesPriority = filterPriority ? t.priority === filterPriority : true;
+                    const matchesStatus = filterStatus ? t.status === filterStatus : true;
+                    return matchesSearch && matchesPriority && matchesStatus;
+                });
+
+                if (filtered.length === 0) {
+                    return (
+                        <div className="empty-state">
+                            <FiSearch size={32} style={{ opacity: 0.2, marginBottom: '12px' }} />
+                            <h3>No matches found</h3>
+                            <p>Try adjusting your search or filters.</p>
+                        </div>
+                    );
+                }
+
+                return (
+                    <div className="tasks-container">
+                        <div className="table-wrap">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Task</th>
+                                        <th>Project</th>
+                                        {isAdmin && <th>Assigned To</th>}
+                                        <th>Priority</th>
+                                        <th>Status</th>
+                                        <th>Deadline</th>
+                                        {isAdmin && <th>Actions</th>}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {filtered.map((task) => (
+                                        <tr key={task.id}>
+                                            <td style={{ fontWeight: 600 }}>{task.title}</td>
                                             <td>
                                                 <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.85rem' }}>
-                                                    <FiUser size={14} color="var(--text-secondary)" /> {task.assignee?.name || 'Unassigned'}
+                                                    <FiLayers size={14} color="var(--primary)" /> {task.project?.title || '—'}
                                                 </div>
                                             </td>
-                                        )}
-                                        <td>
-                                            <span className={`badge badge-${task.priority.toLowerCase()}`}>{task.priority}</span>
-                                        </td>
-                                        <td>
-                                            <select
-                                                value={task.status}
-                                                onChange={(e) => handleStatusChange(task.id, e.target.value)}
-                                                disabled={!isAdmin && task.assignedTo !== user.id}
-                                                className="auth-zoho-input"
-                                                style={{ padding: '4px 8px', fontSize: '0.8rem', width: '130px', margin: 0, height: '32px' }}
-                                            >
-                                                <option value="Pending">Pending</option>
-                                                <option value="In Progress">In Progress</option>
-                                                <option value="Completed">Completed</option>
-                                            </select>
-                                        </td>
-                                        <td>
-                                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
-                                                <FiCalendar size={14} /> {task.deadline || 'No deadline'}
-                                            </div>
-                                        </td>
-                                        {isAdmin && (
+                                            {isAdmin && (
+                                                <td>
+                                                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.85rem' }}>
+                                                        <FiUser size={14} color="var(--text-secondary)" /> {task.assignee?.name || 'Unassigned'}
+                                                    </div>
+                                                </td>
+                                            )}
                                             <td>
-                                                <div style={{ display: 'flex', gap: '8px' }}>
-                                                    <button className="btn btn-outline btn-sm" onClick={() => openEditTask(task)} title="Edit">
-                                                        <FiEdit2 size={12} />
-                                                    </button>
-                                                    <button className="btn btn-danger btn-sm" onClick={() => handleTaskDelete(task.id)} title="Delete">
-                                                        <FiTrash2 size={12} />
-                                                    </button>
+                                                <span className={`badge badge-${task.priority.toLowerCase()}`}>{task.priority}</span>
+                                            </td>
+                                            <td>
+                                                <select
+                                                    value={task.status}
+                                                    onChange={(e) => handleStatusUpdate(task.id, e.target.value)}
+                                                    disabled={!isAdmin && task.assignedTo !== user.id}
+                                                    className="auth-zoho-input"
+                                                    style={{ padding: '4px 8px', fontSize: '0.8rem', width: '130px', margin: 0, height: '32px' }}
+                                                >
+                                                    <option value="Pending">Pending</option>
+                                                    <option value="In Progress">In Progress</option>
+                                                    <option value="Completed">Completed</option>
+                                                </select>
+                                            </td>
+                                            <td>
+                                                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
+                                                    <FiCalendar size={14} /> {task.deadline || 'No deadline'}
                                                 </div>
                                             </td>
-                                        )}
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
+                                            {isAdmin && (
+                                                <td>
+                                                    <div style={{ display: 'flex', gap: '8px' }}>
+                                                        <button className="btn btn-outline btn-sm" onClick={() => openEditTask(task)} title="Edit">
+                                                            <FiEdit2 size={12} />
+                                                        </button>
+                                                        <button className="btn btn-danger btn-sm" onClick={() => handleTaskDelete(task.id)} title="Delete">
+                                                            <FiTrash2 size={12} />
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            )}
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                </div>
-            )}
+                );
+            })()}
 
             {/* Task Modal */}
             {taskModal && (

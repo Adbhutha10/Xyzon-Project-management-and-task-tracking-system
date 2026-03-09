@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const auth = require('../middleware/auth');
 const adminOnly = require('../middleware/adminOnly');
-const { Task, User, Project, ProjectMember } = require('../models');
+const { Task, User, Project, ProjectMember, Notification } = require('../models');
 
 // GET /api/tasks — Admin: all tasks, Member: own tasks
 router.get('/', auth, async (req, res) => {
@@ -72,6 +72,14 @@ router.post('/', auth, adminOnly, async (req, res) => {
             status: 'Pending',
         });
 
+        if (assignedTo) {
+            await Notification.create({
+                userId: assignedTo,
+                message: `You've been assigned a new task: "${title}" in project "${project.title}"`,
+                link: `/projects/${projectId}`
+            });
+        }
+
         return res.status(201).json({ message: 'Task created.', task });
     } catch (error) {
         console.error('Create task error:', error);
@@ -90,6 +98,15 @@ router.put('/:id', auth, adminOnly, async (req, res) => {
         // Ensure new assignee is a member of the project
         if (assignedTo) {
             await ProjectMember.findOrCreate({ where: { projectId: task.projectId, userId: assignedTo } });
+        }
+
+        // Create notification if assignee changed or new assignee added
+        if (assignedTo && assignedTo !== task.assignedTo) {
+            await Notification.create({
+                userId: assignedTo,
+                message: `You have been assigned the task: "${title || task.title}" in project "${task.project?.title || 'Project'}"`,
+                link: `/projects/${task.projectId}`
+            });
         }
 
         await task.update({ title, description, priority, status, deadline, assignedTo });

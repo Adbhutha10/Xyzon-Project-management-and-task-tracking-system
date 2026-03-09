@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import confetti from 'canvas-confetti';
+import { useParams, useNavigate, Link } from 'react-router-dom';
 import { getProject, createTask, updateTask, deleteTask, updateStatus, getUsers } from '../../api';
 import { useAuth } from '../../context/AuthContext';
 import Layout from '../../components/Layout';
@@ -80,9 +81,17 @@ const ProjectDetailPage = () => {
         }
     };
 
-    const handleStatusChange = async (taskId, newStatus) => {
+    const handleStatusUpdate = async (taskId, value) => {
         try {
-            await updateStatus(taskId, { status: newStatus });
+            await updateStatus(taskId, { status: value });
+            if (value === 'Completed') {
+                confetti({
+                    particleCount: 150,
+                    spread: 70,
+                    origin: { y: 0.6 },
+                    colors: ['#4F46E5', '#06B6D4', '#10B981']
+                });
+            }
             fetchProject();
         } catch (err) {
             alert('Status update failed.');
@@ -181,7 +190,7 @@ const ProjectDetailPage = () => {
                                         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                                             <select
                                                 value={task.status}
-                                                onChange={(e) => handleStatusChange(task.id, e.target.value)}
+                                                onChange={(e) => handleStatusUpdate(task.id, e.target.value)}
                                                 disabled={!isAdmin && task.assignedTo !== user.id}
                                                 className="auth-zoho-input"
                                                 style={{ padding: '4px 8px', fontSize: '0.8rem', width: '130px', margin: 0, height: '32px' }}
