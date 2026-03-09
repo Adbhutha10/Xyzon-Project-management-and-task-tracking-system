@@ -1,96 +1,297 @@
 import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 
-const features = [
-    { icon: '📁', title: 'Project Management', desc: 'Create and organize projects with deadlines and team assignments.' },
-    { icon: '✅', title: 'Task Assignment', desc: 'Assign tasks to members with priorities and track every detail.' },
-    { icon: '📊', title: 'Progress Tracking', desc: 'Real-time dashboards show completion rates and team productivity.' },
-    { icon: '👥', title: 'Team Collaboration', desc: 'Manage your team, assign roles, and monitor individual workloads.' },
-];
+/* ── Typewriter effect ───────────────────────────────────────────── */
+const words = ['productivity', 'collaboration', 'clarity', 'your team'];
+const useTypewriter = () => {
+    const [index, setIndex] = useState(0);
+    const [displayed, setDisplayed] = useState('');
+    const [deleting, setDeleting] = useState(false);
 
-const steps = [
-    { num: 1, title: 'Register & Join', desc: 'Create your account and get added to projects by your admin.' },
-    { num: 2, title: 'Get Assigned Tasks', desc: 'Admin creates tasks and assigns them to you with clear deadlines.' },
-    { num: 3, title: 'Track Progress', desc: 'Update your task status and watch your progress grow.' },
-];
+    useEffect(() => {
+        const word = words[index];
+        let timeout;
+        if (!deleting && displayed.length < word.length) {
+            timeout = setTimeout(() => setDisplayed(word.slice(0, displayed.length + 1)), 80);
+        } else if (!deleting && displayed.length === word.length) {
+            timeout = setTimeout(() => setDeleting(true), 1800);
+        } else if (deleting && displayed.length > 0) {
+            timeout = setTimeout(() => setDisplayed(displayed.slice(0, -1)), 45);
+        } else if (deleting && displayed.length === 0) {
+            setDeleting(false);
+            setIndex((i) => (i + 1) % words.length);
+        }
+        return () => clearTimeout(timeout);
+    }, [displayed, deleting, index]);
 
-const HomePage = () => {
+    return displayed;
+};
+
+/* ── Scroll fade-in hook ─────────────────────────────────────────── */
+const useFadeIn = (ref) => {
+    const [visible, setVisible] = useState(false);
+    useEffect(() => {
+        if (!ref.current) return;
+        const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) setVisible(true); }, { threshold: 0.15 });
+        obs.observe(ref.current);
+        return () => obs.disconnect();
+    }, [ref]);
+    return visible;
+};
+
+/* ── FadeSection wrapper ─────────────────────────────────────────── */
+import { useRef } from 'react';
+const FadeSection = ({ children, className = '', delay = 0 }) => {
+    const ref = useRef(null);
+    const visible = useFadeIn(ref);
     return (
-        <div className="home-page">
-            {/* Navbar */}
-            <nav className="home-nav">
-                <div className="home-logo">
-                    <div className="home-logo-icon">🚀</div>
-                    <span className="home-logo-text">Xyzon PM</span>
-                </div>
-                <div className="home-nav-actions">
-                    <Link to="/login" className="btn-hero-outline" style={{ padding: '8px 18px', fontSize: '0.85rem' }}>
-                        Login
-                    </Link>
-                    <Link to="/register" className="btn-hero-primary" style={{ padding: '8px 18px', fontSize: '0.85rem' }}>
-                        Get Started →
-                    </Link>
-                    <Link to="/admin/login" className="admin-icon-btn" title="Admin Portal">
-                        🔐 Admin
-                    </Link>
+        <div ref={ref} className={className}
+            style={{
+                opacity: visible ? 1 : 0, transform: visible ? 'translateY(0)' : 'translateY(28px)',
+                transition: `opacity 0.6s ease ${delay}ms, transform 0.6s ease ${delay}ms`
+            }}>
+            {children}
+        </div>
+    );
+};
+
+/* ── Data ────────────────────────────────────────────────────────── */
+const features = [
+    {
+        icon: '📋',
+        title: 'Plan your projects visually',
+        desc: 'Break down any project into tasks, milestones, and dependencies. Get a bird\'s-eye view of everything happening across your team — deadlines, ownership, and status at a glance.',
+        highlights: ['Task boards & lists', 'Milestone tracking', 'Deadline management'],
+        color: '#EEF2FF',
+    },
+    {
+        icon: '✅',
+        title: 'Assign tasks with full context',
+        desc: 'Give every task a clear owner, priority, and due date. Members see exactly what they need to do next, and admins always know who\'s responsible for what.',
+        highlights: ['Priority levels (Low / Medium / High)', 'Task status updates', 'Per-member workload view'],
+        color: '#ECFDF5',
+    },
+    {
+        icon: '📊',
+        title: 'Track progress in real time',
+        desc: 'Your dashboard updates live as team members mark tasks done. Watch completion rates climb and catch bottlenecks before they become blockers.',
+        highlights: ['Live completion %', 'Pending & in-progress counts', 'Team productivity overview'],
+        color: '#FFFBEB',
+    },
+];
+
+const stats = [
+    { value: '100%', label: 'Role-based access' },
+    { value: '3', label: 'Priority levels' },
+    { value: '∞', label: 'Projects & Tasks' },
+    { value: '0₹', label: 'Setup cost' },
+];
+
+const testimonials = [
+    { quote: 'Having clear task ownership and deadlines made a huge difference to how our team operates.', author: 'Ravi S.', role: 'Engineering Lead' },
+    { quote: 'The admin dashboard is everything we needed — total visibility without micromanaging.', author: 'Priya M.', role: 'Project Manager' },
+];
+
+/* ── Component ───────────────────────────────────────────────────── */
+const HomePage = () => {
+    const typeword = useTypewriter();
+
+    return (
+        <div className="hp-root">
+            {/* ── Navbar ── */}
+            <nav className="hp-nav">
+                <div className="hp-nav-inner">
+                    <div className="home-logo">
+                        <div className="home-logo-icon">🚀</div>
+                        <span className="home-logo-text">Xyzon PM</span>
+                    </div>
+                    <div className="hp-nav-links">
+                        <a href="#features" className="hp-nav-link">Features</a>
+                        <a href="#how" className="hp-nav-link">How it works</a>
+                        <a href="#testimonials" className="hp-nav-link">Testimonials</a>
+                    </div>
+                    <div className="home-nav-actions">
+                        <Link to="/login" className="btn btn-outline btn-sm">Login</Link>
+                        <Link to="/register" className="btn btn-primary btn-sm">Get Started →</Link>
+                        <Link to="/admin/login" className="admin-icon-btn" title="Admin Portal">🔐 Admin</Link>
+                    </div>
                 </div>
             </nav>
 
-            {/* Hero */}
-            <section className="hero">
-                <div className="hero-tag">✨ Team Project Management</div>
-                <h1>
-                    Manage Teams.<br />
-                    Assign Tasks. <span>Track Progress.</span>
-                </h1>
-                <p className="hero-desc">
-                    Xyzon PM helps teams stay aligned, hit deadlines, and deliver results —
-                    all from one clean, powerful dashboard.
-                </p>
-                <div className="hero-ctas">
-                    <Link to="/register" className="btn-hero-primary">Get Started Free →</Link>
-                    <Link to="/login" className="btn-hero-outline">Member Login</Link>
+            {/* ── Hero ── */}
+            <section className="hp-hero">
+                <div className="hp-hero-content">
+                    <div className="hero-tag">✨ Built for modern teams</div>
+                    <h1 className="hp-hero-h1">
+                        Project management<br />
+                        built for <span className="hp-typewriter">{typeword}<span className="hp-cursor">|</span></span>
+                    </h1>
+                    <p className="hp-hero-desc">
+                        Plan projects, assign tasks, and track progress — all from one clean dashboard.
+                        Keep every team member aligned and every deadline in sight.
+                    </p>
+                    <div className="hp-hero-ctas">
+                        <Link to="/register" className="btn-hero-primary">Get started for free →</Link>
+                        <Link to="/login" className="btn-hero-outline">Member sign in</Link>
+                    </div>
+                    <div className="hp-hero-trust">
+                        <span>✅ No credit card required</span>
+                        <span>✅ Setup in under 2 minutes</span>
+                        <span>✅ Role-based access</span>
+                    </div>
+                </div>
+
+                {/* Dashboard preview mockup */}
+                <div className="hp-hero-mockup">
+                    <div className="mockup-bar">
+                        <span className="mockup-dot red"></span>
+                        <span className="mockup-dot yellow"></span>
+                        <span className="mockup-dot green"></span>
+                        <span style={{ marginLeft: 'auto', fontSize: '0.7rem', color: '#94A3B8' }}>Xyzon PM — Dashboard</span>
+                    </div>
+                    <div className="mockup-body">
+                        <div className="mockup-stats">
+                            {[['📋', '12', 'Total Tasks'], ['⏳', '4', 'Pending'], ['🔄', '5', 'In Progress'], ['✅', '3', 'Completed']].map(([ic, v, l]) => (
+                                <div className="mockup-stat" key={l}>
+                                    <div style={{ fontSize: '1.1rem', marginBottom: '4px' }}>{ic}</div>
+                                    <div style={{ fontSize: '1.3rem', fontWeight: 800, color: '#0F172A' }}>{v}</div>
+                                    <div style={{ fontSize: '0.7rem', color: '#94A3B8', marginTop: '2px' }}>{l}</div>
+                                </div>
+                            ))}
+                        </div>
+                        <div className="mockup-progress-row">
+                            <span style={{ fontSize: '0.75rem', fontWeight: 600, color: '#475569' }}>Team Progress</span>
+                            <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#4F46E5' }}>62%</span>
+                        </div>
+                        <div className="mockup-pbar"><div className="mockup-pfill" style={{ width: '62%' }}></div></div>
+                        <div className="mockup-tasks">
+                            {[
+                                { t: 'Design system setup', s: 'Completed', sc: '#D1FAE5', tc: '#065F46' },
+                                { t: 'API integration', s: 'In Progress', sc: '#DBEAFE', tc: '#1D4ED8' },
+                                { t: 'Testing & QA', s: 'Pending', sc: '#FEF9C3', tc: '#854D0E' },
+                            ].map((task) => (
+                                <div className="mockup-task" key={task.t}>
+                                    <span className="mockup-task-title">{task.t}</span>
+                                    <span className="mockup-badge" style={{ background: task.sc, color: task.tc }}>{task.s}</span>
+                                </div>
+                            ))}
+                        </div>
+                    </div>
                 </div>
             </section>
 
-            {/* Features */}
-            <div style={{ background: '#fff', borderTop: '1px solid #E2E8F0', borderBottom: '1px solid #E2E8F0' }}>
-                <section className="features">
-                    <div className="section-center">
-                        <p className="section-label">Why Xyzon PM?</p>
-                        <h2 className="section-heading">Everything your team needs</h2>
+            {/* ── Stats bar ── */}
+            <div className="hp-stats-bar">
+                {stats.map((s) => (
+                    <div className="hp-stat" key={s.label}>
+                        <span className="hp-stat-value">{s.value}</span>
+                        <span className="hp-stat-label">{s.label}</span>
                     </div>
-                    <div className="features-grid">
-                        {features.map((f) => (
-                            <div className="feature-card" key={f.title}>
-                                <div className="feature-icon-wrap">{f.icon}</div>
-                                <h3 className="feature-title">{f.title}</h3>
-                                <p className="feature-desc">{f.desc}</p>
-                            </div>
-                        ))}
-                    </div>
-                </section>
+                ))}
             </div>
 
-            {/* How it works */}
-            <div style={{ padding: '60px 60px', maxWidth: '1100px', margin: '0 auto' }}>
-                <div className="section-center">
+            {/* ── Features ── */}
+            <section className="hp-features" id="features">
+                <FadeSection className="hp-section-header">
+                    <p className="section-label">Features</p>
+                    <h2 className="section-heading">Everything your team needs</h2>
+                    <p className="hp-section-sub">One platform to plan, assign, and track — no extra tools needed.</p>
+                </FadeSection>
+
+                {features.map((f, i) => (
+                    <FadeSection key={f.title} className={`hp-feature-row ${i % 2 === 1 ? 'hp-feature-row-rev' : ''}`} delay={100}>
+                        <div className="hp-feature-text">
+                            <div className="hp-feature-icon-big">{f.icon}</div>
+                            <h3 className="hp-feature-title">{f.title}</h3>
+                            <p className="hp-feature-desc">{f.desc}</p>
+                            <ul className="hp-feature-list">
+                                {f.highlights.map((h) => <li key={h}><span className="hp-check">✓</span>{h}</li>)}
+                            </ul>
+                        </div>
+                        <div className="hp-feature-visual" style={{ background: f.color }}>
+                            <div style={{ fontSize: '4rem', opacity: 0.15, position: 'absolute', right: 20, bottom: 10 }}>{f.icon}</div>
+                            <div className="hp-feature-card-preview">
+                                <div style={{ fontWeight: 700, fontSize: '0.9rem', marginBottom: '12px', color: '#0F172A' }}>{f.title}</div>
+                                {f.highlights.map((h) => (
+                                    <div key={h} className="hp-preview-row">
+                                        <span className="hp-preview-check">✓</span>
+                                        <span>{h}</span>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    </FadeSection>
+                ))}
+            </section>
+
+            {/* ── How it works ── */}
+            <section className="hp-how" id="how">
+                <FadeSection className="hp-section-header">
                     <p className="section-label">How It Works</p>
                     <h2 className="section-heading">Up and running in minutes</h2>
-                </div>
-                <div className="steps-grid">
-                    {steps.map((s) => (
-                        <div className="step" key={s.num}>
-                            <div className="step-num">{s.num}</div>
-                            <h4>{s.title}</h4>
-                            <p>{s.desc}</p>
-                        </div>
+                </FadeSection>
+                <div className="hp-steps">
+                    {[
+                        { n: 1, icon: '📝', title: 'Register your account', desc: 'Sign up as a member or log in as admin using your credentials.' },
+                        { n: 2, icon: '📁', title: 'Create projects', desc: 'Admin creates projects and assigns team members to each one.' },
+                        { n: 3, icon: '✅', title: 'Assign & track tasks', desc: 'Add tasks with priorities and deadlines, then watch progress live.' },
+                    ].map((s, i) => (
+                        <FadeSection key={s.n} delay={i * 120}>
+                            <div className="hp-step">
+                                <div className="hp-step-icon">{s.icon}</div>
+                                <div className="hp-step-num">{s.n}</div>
+                                <h4 className="hp-step-title">{s.title}</h4>
+                                <p className="hp-step-desc">{s.desc}</p>
+                            </div>
+                        </FadeSection>
                     ))}
                 </div>
-            </div>
+            </section>
 
-            {/* Footer */}
+            {/* ── Testimonials ── */}
+            <section className="hp-testimonials" id="testimonials">
+                <FadeSection className="hp-section-header">
+                    <p className="section-label">Testimonials</p>
+                    <h2 className="section-heading">Loved by teams</h2>
+                </FadeSection>
+                <div className="hp-testi-grid">
+                    {testimonials.map((t, i) => (
+                        <FadeSection key={i} delay={i * 150}>
+                            <div className="hp-testi-card">
+                                <div className="hp-testi-quote">"</div>
+                                <p className="hp-testi-text">{t.quote}</p>
+                                <div className="hp-testi-author">
+                                    <div className="hp-testi-avatar">{t.author[0]}</div>
+                                    <div>
+                                        <div className="hp-testi-name">{t.author}</div>
+                                        <div className="hp-testi-role">{t.role}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </FadeSection>
+                    ))}
+                </div>
+            </section>
+
+            {/* ── CTA Banner ── */}
+            <FadeSection>
+                <section className="hp-cta-banner">
+                    <h2>Ready to manage your team better?</h2>
+                    <p>Join your team on Xyzon PM and start delivering projects on time.</p>
+                    <div className="hp-hero-ctas" style={{ justifyContent: 'center' }}>
+                        <Link to="/register" className="btn-hero-primary">Get Started Free →</Link>
+                        <Link to="/admin/login" className="btn-hero-outline" style={{ borderColor: 'rgba(79,70,229,0.3)', color: '#4F46E5' }}>Admin Login</Link>
+                    </div>
+                </section>
+            </FadeSection>
+
+            {/* ── Footer ── */}
             <footer className="home-footer">
-                <p>© 2024 Xyzon PM · Built for teams that ship 🚀</p>
+                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                    <div className="home-logo-icon" style={{ width: 24, height: 24, fontSize: '0.7rem', borderRadius: '6px' }}>🚀</div>
+                    <span style={{ fontWeight: 700, color: '#475569', fontSize: '0.88rem' }}>Xyzon PM</span>
+                </div>
+                <p>© 2024 Xyzon PM · Built for teams that ship.</p>
             </footer>
         </div>
     );
