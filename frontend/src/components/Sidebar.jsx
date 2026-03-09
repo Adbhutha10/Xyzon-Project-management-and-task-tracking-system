@@ -31,10 +31,10 @@ const Sidebar = () => {
         <aside className="sidebar">
             {/* Brand */}
             <div className="sidebar-brand">
-                <div className="brand-icon">
-                    <img src="/xyzon-logo.jpeg" alt="Planora" style={{ width: 'auto', height: '100%', objectFit: 'contain', borderRadius: '6px' }} />
+                <div className="brand-logo-wrap">
+                    <img src="/xyzon-logo.jpeg" alt="Xyzon Innovations" />
                 </div>
-                <div>
+                <div className="brand-details">
                     <div className="brand-name">Planora</div>
                     <div className="brand-sub">Project Management &amp; Task Tracking</div>
                 </div>
