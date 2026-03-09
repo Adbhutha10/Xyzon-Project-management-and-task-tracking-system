@@ -26,11 +26,16 @@ const Sidebar = () => {
 
     return (
         <aside className="sidebar">
+            {/* Brand */}
             <div className="sidebar-brand">
-                <span className="brand-icon">🚀</span>
-                <span className="brand-name">Xyzon PM</span>
+                <div className="brand-icon">🚀</div>
+                <div>
+                    <div className="brand-name">Xyzon PM</div>
+                    <div className="brand-sub">Project Management</div>
+                </div>
             </div>
 
+            {/* User info */}
             <div className="sidebar-user">
                 <div className="user-avatar">{user?.name?.charAt(0).toUpperCase()}</div>
                 <div className="user-info">
@@ -41,7 +46,9 @@ const Sidebar = () => {
                 </div>
             </div>
 
+            {/* Navigation */}
             <nav className="sidebar-nav">
+                <div className="sidebar-section-label">Navigation</div>
                 {links.map((link) => (
                     <NavLink
                         key={link.to}
@@ -54,9 +61,12 @@ const Sidebar = () => {
                 ))}
             </nav>
 
-            <button className="sidebar-logout" onClick={handleLogout}>
-                <span>🚪</span> Logout
-            </button>
+            {/* Logout */}
+            <div className="sidebar-footer">
+                <button className="sidebar-logout" onClick={handleLogout}>
+                    <span>🚪</span> Sign Out
+                </button>
+            </div>
         </aside>
     );
 };

@@ -6,9 +6,9 @@ import Layout from '../../components/Layout';
 
 const StatCard = ({ icon, label, value, color }) => (
     <div className="stat-card">
-        <span className="stat-icon">{icon}</span>
+        <div className={`stat-icon-wrap ${color || 'gray'}`}>{icon}</div>
         <div className="stat-info">
-            <span className="stat-value" style={{ color: color || 'var(--text-primary)' }}>{value}</span>
+            <span className="stat-value">{value}</span>
             <span className="stat-label">{label}</span>
         </div>
     </div>
@@ -49,7 +49,7 @@ const DashboardPage = () => {
             <div className="page-header">
                 <div>
                     <h1 className="page-title">
-                        {isAdmin ? '📊 Admin Dashboard' : `👋 Hello, ${user?.name}`}
+                        {isAdmin ? 'Dashboard' : `Hello, ${user?.name} 👋`}
                     </h1>
                     <p className="page-subtitle">
                         {isAdmin ? 'Overview of your team and projects' : 'Here\'s a summary of your assigned tasks'}
@@ -62,12 +62,12 @@ const DashboardPage = () => {
 
             {/* Stats */}
             <div className="stats-grid">
-                <StatCard icon="📋" label="Total Tasks" value={stats?.totalTasks ?? 0} />
-                <StatCard icon="⏳" label="Pending" value={stats?.pendingTasks ?? 0} color="var(--warning)" />
-                <StatCard icon="🔄" label="In Progress" value={stats?.inProgressTasks ?? 0} color="var(--info)" />
-                <StatCard icon="✅" label="Completed" value={stats?.completedTasks ?? 0} color="var(--success)" />
-                {isAdmin && <StatCard icon="📁" label="Projects" value={stats?.totalProjects ?? 0} color="var(--primary)" />}
-                {isAdmin && <StatCard icon="👥" label="Team Members" value={stats?.totalMembers ?? 0} />}
+                <StatCard icon="📋" label="Total Tasks" value={stats?.totalTasks ?? 0} color="purple" />
+                <StatCard icon="⏳" label="Pending" value={stats?.pendingTasks ?? 0} color="orange" />
+                <StatCard icon="🔄" label="In Progress" value={stats?.inProgressTasks ?? 0} color="blue" />
+                <StatCard icon="✅" label="Completed" value={stats?.completedTasks ?? 0} color="green" />
+                {isAdmin && <StatCard icon="📁" label="Projects" value={stats?.totalProjects ?? 0} color="cyan" />}
+                {isAdmin && <StatCard icon="👥" label="Team Members" value={stats?.totalMembers ?? 0} color="gray" />}
             </div>
 
             {/* Progress */}
