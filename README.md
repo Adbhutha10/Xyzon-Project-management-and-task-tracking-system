@@ -110,7 +110,7 @@ cd "Xyzon assignment - 2"
 
 ---
 
-## � Advancements in the Project (From My End)
+##  Advancements in the Project (From My End)
 
 Beyond the core requirements, the following enhancements were independently designed and implemented to elevate the product experience:
 
