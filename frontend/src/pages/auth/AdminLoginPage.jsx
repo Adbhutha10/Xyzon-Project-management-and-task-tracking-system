@@ -1,11 +1,35 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { loginUser } from '../../api';
 import { useAuth } from '../../context/AuthContext';
 import {
     FaGoogle, FaFacebookF, FaLinkedinIn, FaGithub, FaApple, FaMicrosoft
 } from 'react-icons/fa';
-import { FiBarChart2, FiShield } from 'react-icons/fi';
+import { FiBarChart2, FiShield, FiLayout } from 'react-icons/fi';
+
+const features = [
+    {
+        title: "Mission Control for Projects",
+        desc: "Full visibility on team productivity, project health, and resource allocation. Lead users with data-driven insights.",
+        icon: FiBarChart2,
+        color: "#4338CA",
+        bg: "#eef2ff"
+    },
+    {
+        title: "MFA for all accounts",
+        desc: "Secure online accounts with Planora OneAuth 2FA. Back up secrets and never lose access to your accounts.",
+        icon: FiShield,
+        color: "#159aff",
+        bg: "#f0f7ff"
+    },
+    {
+        title: "Plan projects with clarity",
+        desc: "Break down complex projects into manageable tasks. Assign owners, set priorities, and hit your milestones on time.",
+        icon: FiLayout,
+        color: "#10b981",
+        bg: "#f0fdf4"
+    }
+];
 
 const AdminLoginPage = () => {
     const { login } = useAuth();
@@ -13,6 +37,15 @@ const AdminLoginPage = () => {
     const [form, setForm] = useState({ email: '', password: '' });
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
+    const [activeFeature, setActiveFeature] = useState(0);
+
+    // Auto-scroll logic (7 seconds)
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setActiveFeature((prev) => (prev + 1) % features.length);
+        }, 7000);
+        return () => clearInterval(interval);
+    }, []);
 
     const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
 
@@ -35,6 +68,8 @@ const AdminLoginPage = () => {
             setLoading(false);
         }
     };
+
+    const FeatureIcon = features[activeFeature].icon;
 
     return (
         <div className="auth-bg-zoho">
@@ -91,35 +126,41 @@ const AdminLoginPage = () => {
                     </p>
                 </div>
 
-                {/* Right Side: Showcase */}
-                <div className="auth-right-zoho" style={{ background: '#f8fafc' }}>
-                    <div className="auth-zoho-illustration">
+                {/* Right Side: Showcase Carousel */}
+                <div className="auth-right-zoho" key={activeFeature} style={{ background: features[activeFeature].bg === '#eef2ff' ? '#f8fafc' : '#fff' }}>
+                    <div className="auth-zoho-illustration auth-fade-in">
                         <div style={{
-                            width: '160px', height: '160px', background: '#eef2ff', borderRadius: '50%',
+                            width: '160px', height: '160px', background: features[activeFeature].bg, borderRadius: '50%',
                             display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative'
                         }}>
-                            <FiBarChart2 size={80} color="#4338CA" style={{ opacity: 0.8 }} />
+                            <FeatureIcon size={80} color={features[activeFeature].color} style={{ opacity: 0.8 }} />
                             <div style={{
-                                position: 'absolute', width: '30px', height: '60px', background: '#fff',
-                                borderRadius: '4px', bottom: '20px', right: '-10px', boxShadow: '0 8px 16px rgba(0,0,0,0.06)',
-                                display: 'flex', alignItems: 'flex-end', justifyContent: 'center', paddingBottom: '10px'
+                                position: 'absolute', width: '60px', height: '60px', background: '#fff',
+                                borderRadius: '12px', bottom: '10px', right: '-10px', boxShadow: '0 8px 16px rgba(0,0,0,0.06)',
+                                display: 'flex', alignItems: 'center', justifyContent: 'center'
                             }}>
-                                <div style={{ width: '8px', height: '30px', background: '#4338CA', borderRadius: '2px' }}></div>
+                                <div style={{ width: '30px', height: '4px', background: features[activeFeature].color, borderRadius: '2px' }}></div>
                             </div>
                         </div>
                     </div>
 
-                    <h2 className="auth-zoho-showcase-title">Mission Control for Projects</h2>
-                    <p className="auth-zoho-showcase-desc">
-                        Full visibility on team productivity, project health, and resource allocation.
-                        Lead your team to success with data-driven insights.
+                    <h2 className="auth-zoho-showcase-title auth-fade-in" style={{ color: '#1a1a1a' }}>{features[activeFeature].title}</h2>
+                    <p className="auth-zoho-showcase-desc auth-fade-in">
+                        {features[activeFeature].desc}
                     </p>
-                    <a href="#" className="auth-zoho-learn-more" style={{ background: '#eef2ff', color: '#4338CA' }}>Learn more</a>
+                    <a href="#" className="auth-zoho-learn-more auth-fade-in" style={{
+                        background: features[activeFeature].bg,
+                        color: features[activeFeature].color
+                    }}>Learn more</a>
 
                     <div className="auth-zoho-dots">
-                        <div className="auth-zoho-dot"></div>
-                        <div className="auth-zoho-dot"></div>
-                        <div className="auth-zoho-dot active" style={{ background: '#4338CA' }}></div>
+                        {features.map((_, idx) => (
+                            <div
+                                key={idx}
+                                className={`auth-zoho-dot ${activeFeature === idx ? 'active' : ''}`}
+                                style={activeFeature === idx ? { background: features[activeFeature].color } : {}}
+                            ></div>
+                        ))}
                     </div>
                 </div>
             </div>
