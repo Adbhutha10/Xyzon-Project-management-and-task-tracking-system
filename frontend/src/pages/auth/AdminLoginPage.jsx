@@ -95,57 +95,38 @@ const AdminLoginPage = () => {
                             </div>
                             <h1 className="auth-zoho-title" style={{ margin: 0 }}>Admin Sign In</h1>
                         </div>
-                        <p className="auth-zoho-subtitle" style={{ fontSize: '0.95rem', color: '#64748b' }}>Authorized access to Planora control center</p>
+                        <p className="auth-zoho-subtitle">Authorized access to Planora control center</p>
                     </div>
 
-                    {error && (
-                        <div className="alert alert-error" style={{
-                            marginBottom: '24px',
-                            borderRadius: '8px',
-                            fontSize: '0.85rem',
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '8px'
-                        }}>
-                            <span>{error}</span>
-                        </div>
-                    )}
+                    {error && <div className="alert alert-error" style={{ marginBottom: '20px' }}>{error}</div>}
 
-                    <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-                        <div className="form-group">
-                            <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: '#64748b', marginBottom: '8px' }}>Email Address</label>
-                            <input
-                                name="email"
-                                type="email"
-                                className="auth-zoho-input"
-                                placeholder="e.g. admin@planora.com"
-                                value={form.email}
-                                onChange={handleChange}
-                                required
-                                style={{ margin: 0 }}
-                            />
-                        </div>
-                        <div className="form-group">
-                            <label style={{ display: 'block', fontSize: '0.8rem', fontWeight: 600, color: '#64748b', marginBottom: '8px' }}>Password</label>
-                            <input
-                                name="password"
-                                type="password"
-                                className="auth-zoho-input"
-                                placeholder="Your secure password"
-                                value={form.password}
-                                onChange={handleChange}
-                                required
-                                style={{ margin: 0 }}
-                            />
-                        </div>
+                    <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column' }}>
+                        <input
+                            name="email"
+                            type="email"
+                            className="auth-zoho-input"
+                            placeholder="Admin email"
+                            value={form.email}
+                            onChange={handleChange}
+                            required
+                        />
+                        <input
+                            name="password"
+                            type="password"
+                            className="auth-zoho-input"
+                            placeholder="Password"
+                            value={form.password}
+                            onChange={handleChange}
+                            required
+                        />
 
-                        <button type="submit" className="auth-zoho-btn" style={{ background: '#4338CA', marginTop: '10px' }} disabled={loading}>
-                            {loading ? 'Verifying Identity...' : 'Sign in to Dashboard'}
+                        <button type="submit" className="auth-zoho-btn" style={{ background: '#4338CA' }} disabled={loading}>
+                            {loading ? 'Verifying...' : 'Login as Admin'}
                         </button>
                     </form>
 
-                    <p className="auth-zoho-footer-link" style={{ marginTop: '32px', borderTop: '1px solid #f1f5f9', paddingTop: '24px' }}>
-                        Not an administrator? <Link to="/login" style={{ fontWeight: 600, color: '#4338CA' }}>Switch to Member Login</Link>
+                    <p className="auth-zoho-footer-link">
+                        Not an admin? <Link to="/login">Member Login</Link>
                     </p>
                 </div>
 
