@@ -3,16 +3,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import { registerUser } from '../../api';
 import { useAuth } from '../../context/AuthContext';
 import {
-    FiCheckSquare, FiBarChart2, FiUsers, FiShield,
-} from 'react-icons/fi';
-import { HiOutlineSparkles } from 'react-icons/hi2';
-
-const benefits = [
-    { Icon: HiOutlineSparkles, text: 'Beautiful, intuitive project dashboard' },
-    { Icon: FiCheckSquare, text: 'Stay on top of every deadline' },
-    { Icon: FiUsers, text: 'Collaborate seamlessly with your team' },
-    { Icon: FiBarChart2, text: 'Track your personal productivity' },
-];
+    FaGoogle, FaFacebookF, FaLinkedinIn, FaGithub, FaApple, FaMicrosoft
+} from 'react-icons/fa';
+import { FiLayout } from 'react-icons/fi';
 
 const RegisterPage = () => {
     const { login } = useAuth();
@@ -45,112 +38,121 @@ const RegisterPage = () => {
     const getFieldError = (field) => fieldErrors.find((e) => e.field === field)?.message;
 
     return (
-        <div className="auth-page auth-split">
-            {/* ── Left panel (60%) ─────────────────────── */}
-            <div className="auth-left auth-left-rich">
-                {/* Brand */}
-                <div className="auth-brand">
-                    <img src="/xyzon-logo.jpeg" alt="Planora"
-                        style={{ height: '40px', width: 'auto', objectFit: 'contain', borderRadius: '8px' }} />
-                    <span className="auth-brand-name">Planora</span>
-                </div>
-
-                {/* Headline */}
-                <div className="auth-left-hero">
-                    <h2 className="auth-left-h2">
-                        Build amazing things with your team.
-                    </h2>
-                    <p className="auth-left-sub">
-                        Join thousands of teams who use Planora to stay organized,
-                        focused, and productive. Your new productivity hub awaits.
-                    </p>
-                </div>
-
-                {/* Benefits list */}
-                <ul className="auth-feature-list">
-                    {benefits.map(({ Icon, text }) => (
-                        <li key={text} className="auth-feature-item">
-                            <span className="auth-feature-icon"><Icon size={16} /></span>
-                            {text}
-                        </li>
-                    ))}
-                </ul>
-
-                {/* Stats Row */}
-                <div className="auth-stats-row">
-                    {[['100%', 'Privacy'], ['24/7', 'Support'], ['∞', 'Tasks']].map(([v, l]) => (
-                        <div className="auth-stat-box" key={l}>
-                            <span className="auth-stat-val">{v}</span>
-                            <span className="auth-stat-lbl">{l}</span>
-                        </div>
-                    ))}
-                </div>
-
-                {/* Testimonial */}
-                <div className="auth-testimonial">
-                    <p className="auth-testi-quote">
-                        "We switched to Planora and never looked back. It's the cleanest project management tool we've used."
-                    </p>
-                    <div className="auth-testi-author">
-                        <div className="auth-testi-avatar">P</div>
-                        <div>
-                            <div className="auth-testi-name">Priya M.</div>
-                            <div className="auth-testi-role">Project Manager</div>
-                        </div>
+        <div className="auth-bg-zoho">
+            <div className="auth-card-zoho">
+                {/* Left Side: Form */}
+                <div className="auth-left-zoho">
+                    <div className="auth-zoho-logo">
+                        <img src="/xyzon-logo.jpeg" alt="Planora" style={{ height: '32px', width: 'auto', objectFit: 'contain' }} />
                     </div>
-                </div>
 
-                {/* Security Note */}
-                <div className="auth-security-note">
-                    <FiShield size={13} /> Secure, encrypted and role-protected
-                </div>
-            </div>
+                    <h1 className="auth-zoho-title">Sign up</h1>
+                    <p className="auth-zoho-subtitle">to start using Planora Projects</p>
 
-            {/* ── Right panel (40%) ─────────────────────── */}
-            <div className="auth-right">
-                <div className="auth-card">
-                    <div className="auth-logo-wrap">
-                        <div className="auth-logo-icon">✨</div>
-                        <span className="auth-logo-name">Planora</span>
-                    </div>
-                    <h1 className="auth-title">Create account</h1>
-                    <p className="auth-subtitle">Register as a team member</p>
+                    {error && <div className="alert alert-error" style={{ marginBottom: '20px' }}>⚠️ {error}</div>}
 
-                    {error && <div className="alert alert-error">⚠️ {error}</div>}
-
-                    <form onSubmit={handleSubmit}>
-                        <div className="form-group">
-                            <label className="form-label">Full Name</label>
-                            <input name="name" type="text" className="form-input"
-                                placeholder="John Doe" value={form.name} onChange={handleChange} required />
-                            {getFieldError('name') && <span className="form-error">{getFieldError('name')}</span>}
+                    <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column' }}>
+                        <div style={{ marginBottom: '16px' }}>
+                            <input
+                                name="name"
+                                type="text"
+                                className="auth-zoho-input"
+                                style={{ marginBottom: '4px' }}
+                                placeholder="Full name"
+                                value={form.name}
+                                onChange={handleChange}
+                                required
+                            />
+                            {getFieldError('name') && <span className="form-error" style={{ fontSize: '0.75rem' }}>{getFieldError('name')}</span>}
                         </div>
-                        <div className="form-group">
-                            <label className="form-label">Email Address</label>
-                            <input name="email" type="email" className="form-input"
-                                placeholder="you@example.com" value={form.email} onChange={handleChange} required />
-                            {getFieldError('email') && <span className="form-error">{getFieldError('email')}</span>}
+
+                        <div style={{ marginBottom: '16px' }}>
+                            <input
+                                name="email"
+                                type="email"
+                                className="auth-zoho-input"
+                                style={{ marginBottom: '4px' }}
+                                placeholder="Email address"
+                                value={form.email}
+                                onChange={handleChange}
+                                required
+                            />
+                            {getFieldError('email') && <span className="form-error" style={{ fontSize: '0.75rem' }}>{getFieldError('email')}</span>}
                         </div>
-                        <div className="form-group">
-                            <label className="form-label">Password</label>
-                            <input name="password" type="password" className="form-input"
-                                placeholder="Min 6 chars, 1 uppercase, 1 number" value={form.password} onChange={handleChange} required />
-                            {getFieldError('password') && <span className="form-error">{getFieldError('password')}</span>}
-                            <span className="form-hint">Must be 6+ characters with at least 1 uppercase & 1 number</span>
+
+                        <div style={{ marginBottom: '16px' }}>
+                            <input
+                                name="password"
+                                type="password"
+                                className="auth-zoho-input"
+                                style={{ marginBottom: '4px' }}
+                                placeholder="Password"
+                                value={form.password}
+                                onChange={handleChange}
+                                required
+                            />
+                            {getFieldError('password') && <span className="form-error" style={{ fontSize: '0.75rem' }}>{getFieldError('password')}</span>}
+                            <span className="form-hint" style={{ fontSize: '0.7rem', color: '#999', display: 'block', marginTop: '4px' }}>
+                                6+ chars, 1 uppercase, 1 number
+                            </span>
                         </div>
-                        <button type="submit" className="btn btn-primary btn-full" disabled={loading}>
-                            {loading ? 'Creating account...' : 'Create Account →'}
+
+                        <button type="submit" className="auth-zoho-btn" disabled={loading}>
+                            {loading ? 'Creating account...' : 'Sign Up'}
                         </button>
                     </form>
 
-                    <div className="auth-footer">
-                        Already have an account? <Link to="/login" className="auth-link">Sign in</Link>
+                    <p className="auth-zoho-social-label">Sign up using</p>
+                    <div className="auth-zoho-social-row">
+                        <div className="auth-zoho-social-btn" title="Google"><FaGoogle color="#ea4335" /></div>
+                        <div className="auth-zoho-social-btn" title="Facebook"><FaFacebookF color="#1877f2" /></div>
+                        <div className="auth-zoho-social-btn" title="LinkedIn"><FaLinkedinIn color="#0a66c2" /></div>
+                        <div className="auth-zoho-social-btn" title="GitHub"><FaGithub color="#333" /></div>
+                        <div className="auth-zoho-social-btn" title="Apple"><FaApple color="#000" /></div>
+                        <div className="auth-zoho-social-btn" title="Microsoft"><FaMicrosoft color="#00a1f1" /></div>
                     </div>
-                    <div className="auth-footer" style={{ marginTop: '6px' }}>
-                        <Link to="/" className="auth-link">← Back to Home</Link>
+
+                    <p className="auth-zoho-footer-link">
+                        Already have a Planora account? <Link to="/login">Sign in</Link>
+                    </p>
+                </div>
+
+                {/* Right Side: Showcase */}
+                <div className="auth-right-zoho">
+                    <div className="auth-zoho-illustration">
+                        <div style={{
+                            width: '160px', height: '160px', background: '#f0fdf4', borderRadius: '50%',
+                            display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative'
+                        }}>
+                            <FiLayout size={80} color="#10b981" style={{ opacity: 0.8 }} />
+                            <div style={{
+                                position: 'absolute', width: '70px', height: '40px', background: '#fff',
+                                borderRadius: '8px', top: '20px', left: '-10px', boxShadow: '0 8px 16px rgba(0,0,0,0.06)',
+                                display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '10px'
+                            }}>
+                                <div style={{ width: '100%', height: '4px', background: '#10b981', borderRadius: '2px', opacity: 0.3 }}></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h2 className="auth-zoho-showcase-title">Plan projects with clarity</h2>
+                    <p className="auth-zoho-showcase-desc">
+                        Break down complex projects into manageable tasks.
+                        Assign owners, set priorities, and hit your milestones on time.
+                    </p>
+                    <a href="#" className="auth-zoho-learn-more" style={{ background: '#f0fdf4', color: '#10b981' }}>Learn more</a>
+
+                    <div className="auth-zoho-dots">
+                        <div className="auth-zoho-dot"></div>
+                        <div className="auth-zoho-dot active" style={{ background: '#10b981' }}></div>
+                        <div className="auth-zoho-dot"></div>
                     </div>
                 </div>
             </div>
+
+            <p style={{ position: 'absolute', bottom: '20px', fontSize: '0.8rem', color: '#999' }}>
+                © 2026, Planora Projects. All Rights Reserved.
+            </p>
         </div>
     );
 };
