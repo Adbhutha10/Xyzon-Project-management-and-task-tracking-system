@@ -2098,8 +2098,10 @@ tbody tr:hover {
 .auth-bg-zoho {
   min-height: 100vh;
   background-color: #f7f7f7;
-  background-image: radial-gradient(#d1d1d1 0.5px, transparent 0.5px);
-  background-size: 20px 20px;
+  background-image: url('/auth-bg.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   display: flex;
   align-items: center;
   justify-content: center;
