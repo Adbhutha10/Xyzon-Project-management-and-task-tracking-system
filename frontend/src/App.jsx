@@ -12,6 +12,8 @@ import RegisterPage from './pages/auth/RegisterPage';
 import DashboardPage from './pages/admin/DashboardPage';
 import ProjectsPage from './pages/admin/ProjectsPage';
 import ProjectDetailPage from './pages/admin/ProjectDetailPage';
+import TasksPage from './pages/admin/TasksPage';
+import TeamPage from './pages/admin/TeamPage';
 
 function App() {
   return (
@@ -33,6 +35,14 @@ function App() {
           } />
           <Route path="/projects/:id" element={
             <ProtectedRoute><ProjectDetailPage /></ProtectedRoute>
+          } />
+          <Route path="/tasks" element={
+            <ProtectedRoute><TasksPage /></ProtectedRoute>
+          } />
+
+          {/* Admin only */}
+          <Route path="/team" element={
+            <AdminRoute><TeamPage /></AdminRoute>
           } />
 
           {/* Catch-all */}
