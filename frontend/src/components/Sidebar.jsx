@@ -1,17 +1,20 @@
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import {
+    FiGrid, FiFolder, FiCheckSquare, FiUsers, FiLogOut,
+} from 'react-icons/fi';
 
 const adminLinks = [
-    { to: '/dashboard', icon: '📊', label: 'Dashboard' },
-    { to: '/projects', icon: '📁', label: 'Projects' },
-    { to: '/tasks', icon: '✅', label: 'Tasks' },
-    { to: '/team', icon: '👥', label: 'Team' },
+    { to: '/dashboard', Icon: FiGrid, label: 'Dashboard' },
+    { to: '/projects', Icon: FiFolder, label: 'Projects' },
+    { to: '/tasks', Icon: FiCheckSquare, label: 'Tasks' },
+    { to: '/team', Icon: FiUsers, label: 'Team' },
 ];
 
 const memberLinks = [
-    { to: '/dashboard', icon: '📊', label: 'Dashboard' },
-    { to: '/projects', icon: '📁', label: 'Projects' },
-    { to: '/tasks', icon: '✅', label: 'My Tasks' },
+    { to: '/dashboard', Icon: FiGrid, label: 'Dashboard' },
+    { to: '/projects', Icon: FiFolder, label: 'Projects' },
+    { to: '/tasks', Icon: FiCheckSquare, label: 'My Tasks' },
 ];
 
 const Sidebar = () => {
@@ -28,10 +31,12 @@ const Sidebar = () => {
         <aside className="sidebar">
             {/* Brand */}
             <div className="sidebar-brand">
-                <div className="brand-icon">🚀</div>
+                <div className="brand-icon">
+                    <img src="/xyzon-logo.jpeg" alt="Planora" style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px' }} />
+                </div>
                 <div>
                     <div className="brand-name">Planora</div>
-                    <div className="brand-sub">Project Management & Task Tracking</div>
+                    <div className="brand-sub">Project Management &amp; Task Tracking</div>
                 </div>
             </div>
 
@@ -55,7 +60,7 @@ const Sidebar = () => {
                         to={link.to}
                         className={({ isActive }) => `nav-link ${isActive ? 'nav-link-active' : ''}`}
                     >
-                        <span className="nav-icon">{link.icon}</span>
+                        <link.Icon size={16} className="nav-icon" />
                         <span>{link.label}</span>
                     </NavLink>
                 ))}
@@ -64,7 +69,7 @@ const Sidebar = () => {
             {/* Logout */}
             <div className="sidebar-footer">
                 <button className="sidebar-logout" onClick={handleLogout}>
-                    <span>🚪</span> Sign Out
+                    <FiLogOut size={15} /> Sign Out
                 </button>
             </div>
         </aside>

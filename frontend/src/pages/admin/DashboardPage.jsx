@@ -3,10 +3,23 @@ import { Link } from 'react-router-dom';
 import { getDashboard } from '../../api';
 import { useAuth } from '../../context/AuthContext';
 import Layout from '../../components/Layout';
+import {
+    FiClipboard, FiClock, FiRefreshCw, FiCheckCircle,
+    FiFolder, FiUsers,
+} from 'react-icons/fi';
 
-const StatCard = ({ icon, label, value, color }) => (
+const statConfig = [
+    { key: 'totalTasks', Icon: FiClipboard, label: 'Total Tasks', color: 'purple' },
+    { key: 'pendingTasks', Icon: FiClock, label: 'Pending', color: 'orange' },
+    { key: 'inProgressTasks', Icon: FiRefreshCw, label: 'In Progress', color: 'blue' },
+    { key: 'completedTasks', Icon: FiCheckCircle, label: 'Completed', color: 'green' },
+    { key: 'totalProjects', Icon: FiFolder, label: 'Projects', color: 'cyan', adminOnly: true },
+    { key: 'totalMembers', Icon: FiUsers, label: 'Team Members', color: 'gray', adminOnly: true },
+];
+
+const StatCard = ({ Icon, label, value, color }) => (
     <div className="stat-card">
-        <div className={`stat-icon-wrap ${color || 'gray'}`}>{icon}</div>
+        <div className={`stat-icon-wrap ${color}`}><Icon size={20} /></div>
         <div className="stat-info">
             <span className="stat-value">{value}</span>
             <span className="stat-label">{label}</span>
@@ -49,7 +62,7 @@ const DashboardPage = () => {
             <div className="page-header">
                 <div>
                     <h1 className="page-title">
-                        {isAdmin ? 'Dashboard' : `Hello, ${user?.name} 👋`}
+                        {isAdmin ? 'Dashboard' : `Hello, ${user?.name}`}
                     </h1>
                     <p className="page-subtitle">
                         {isAdmin ? 'Overview of your team and projects' : 'Here\'s a summary of your assigned tasks'}
@@ -62,12 +75,11 @@ const DashboardPage = () => {
 
             {/* Stats */}
             <div className="stats-grid">
-                <StatCard icon="📋" label="Total Tasks" value={stats?.totalTasks ?? 0} color="purple" />
-                <StatCard icon="⏳" label="Pending" value={stats?.pendingTasks ?? 0} color="orange" />
-                <StatCard icon="🔄" label="In Progress" value={stats?.inProgressTasks ?? 0} color="blue" />
-                <StatCard icon="✅" label="Completed" value={stats?.completedTasks ?? 0} color="green" />
-                {isAdmin && <StatCard icon="📁" label="Projects" value={stats?.totalProjects ?? 0} color="cyan" />}
-                {isAdmin && <StatCard icon="👥" label="Team Members" value={stats?.totalMembers ?? 0} color="gray" />}
+                {statConfig
+                    .filter((s) => !s.adminOnly || isAdmin)
+                    .map(({ key, Icon, label, color }) => (
+                        <StatCard key={key} Icon={Icon} label={label} value={stats?.[key] ?? 0} color={color} />
+                    ))}
             </div>
 
             {/* Progress */}
@@ -86,7 +98,7 @@ const DashboardPage = () => {
                 </p>
             </div>
 
-            {/* Recent Tasks */}
+            {/* Recent Tasks (Admin) */}
             {isAdmin && stats?.recentTasks?.length > 0 && (
                 <div>
                     <h3 style={{ fontWeight: 700, marginBottom: '16px' }}>Recent Tasks</h3>
@@ -94,18 +106,14 @@ const DashboardPage = () => {
                         <table>
                             <thead>
                                 <tr>
-                                    <th>Task</th>
-                                    <th>Project</th>
-                                    <th>Assigned To</th>
-                                    <th>Priority</th>
-                                    <th>Status</th>
-                                    <th>Deadline</th>
+                                    <th>Task</th><th>Project</th><th>Assigned To</th>
+                                    <th>Priority</th><th>Status</th><th>Deadline</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {stats.recentTasks.map((task) => (
                                     <tr key={task.id}>
-                                        <td style={{ fontWeight: 600 }}>{task.title}</td>
+                                        <td>{task.title}</td>
                                         <td>{task.project?.title || '—'}</td>
                                         <td>{task.assignee?.name || '—'}</td>
                                         <td>{priorityBadge(task.priority)}</td>
@@ -127,18 +135,14 @@ const DashboardPage = () => {
                         <table>
                             <thead>
                                 <tr>
-                                    <th>Task</th>
-                                    <th>Project</th>
-                                    <th>Priority</th>
-                                    <th>Status</th>
-                                    <th>Deadline</th>
-                                    <th>Action</th>
+                                    <th>Task</th><th>Project</th><th>Priority</th>
+                                    <th>Status</th><th>Deadline</th><th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {stats.taskList.map((task) => (
                                     <tr key={task.id}>
-                                        <td style={{ fontWeight: 600 }}>{task.title}</td>
+                                        <td>{task.title}</td>
                                         <td>{task.project?.title || '—'}</td>
                                         <td>{priorityBadge(task.priority)}</td>
                                         <td>{statusBadge(task.status)}</td>
@@ -156,7 +160,7 @@ const DashboardPage = () => {
 
             {!isAdmin && stats?.taskList?.length === 0 && (
                 <div className="empty-state">
-                    <div className="empty-state-icon">📭</div>
+                    <FiClipboard size={40} style={{ opacity: 0.3, display: 'block', margin: '0 auto 12px' }} />
                     <h3>No tasks assigned yet</h3>
                     <p>Your admin will assign tasks to you soon.</p>
                 </div>

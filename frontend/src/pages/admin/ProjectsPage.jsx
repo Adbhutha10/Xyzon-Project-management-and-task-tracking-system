@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { getProjects, createProject, updateProject, deleteProject, getUsers, addProjectMembers } from '../../api';
 import { useAuth } from '../../context/AuthContext';
 import Layout from '../../components/Layout';
+import { FiPlus, FiEdit2, FiTrash2, FiFolder, FiUsers, FiCalendar, FiX } from 'react-icons/fi';
 
 const ProjectsPage = () => {
     const { isAdmin } = useAuth();
@@ -91,20 +92,20 @@ const ProjectsPage = () => {
         <Layout>
             <div className="page-header">
                 <div>
-                    <h1 className="page-title">📁 Projects</h1>
+                    <h1 className="page-title">Projects</h1>
                     <p className="page-subtitle">{isAdmin ? 'Manage all your team projects' : 'Projects you are assigned to'}</p>
                 </div>
-                {isAdmin && <button className="btn btn-primary" onClick={openCreate}>+ New Project</button>}
+                {isAdmin && <button className="btn btn-primary" onClick={openCreate}><FiPlus /> New Project</button>}
             </div>
 
             {loading ? (
                 <div className="spinner-overlay" style={{ position: 'relative', height: '40vh' }}><div className="spinner" /></div>
             ) : projects.length === 0 ? (
                 <div className="empty-state">
-                    <div className="empty-state-icon">📂</div>
+                    <FiFolder size={36} style={{ opacity: 0.25, display: 'block', margin: '0 auto 12px' }} />
                     <h3>{isAdmin ? 'No projects yet' : 'No projects assigned'}</h3>
                     <p>{isAdmin ? 'Create your first project to get started.' : 'Ask your admin to assign you to a project.'}</p>
-                    {isAdmin && <button className="btn btn-primary" style={{ marginTop: '16px' }} onClick={openCreate}>+ Create Project</button>}
+                    {isAdmin && <button className="btn btn-primary" style={{ marginTop: '16px' }} onClick={openCreate}><FiPlus /> Create Project</button>}
                 </div>
             ) : (
                 <div className="projects-grid">
@@ -114,16 +115,16 @@ const ProjectsPage = () => {
                                 <h3 className="project-title">{proj.title}</h3>
                                 {isAdmin && (
                                     <div className="project-actions" onClick={(e) => e.stopPropagation()}>
-                                        <button className="btn btn-outline btn-sm" onClick={(e) => openEdit(proj, e)}>✏️</button>
-                                        <button className="btn btn-danger btn-sm" onClick={(e) => handleDelete(proj.id, e)}>🗑️</button>
+                                        <button className="btn btn-outline btn-sm" onClick={(e) => openEdit(proj, e)}><FiEdit2 size={13} /></button>
+                                        <button className="btn btn-danger btn-sm" onClick={(e) => handleDelete(proj.id, e)}><FiTrash2 size={13} /></button>
                                     </div>
                                 )}
                             </div>
                             {proj.description && <p className="project-desc">{proj.description.slice(0, 100)}{proj.description.length > 100 ? '...' : ''}</p>}
                             <div className="project-meta">
-                                <span>📋 {taskCount(proj)} tasks</span>
-                                <span>👥 {proj.members?.length ?? 0} members</span>
-                                {proj.deadline && <span>📅 {proj.deadline}</span>}
+                                <span><FiFolder size={12} /> {taskCount(proj)} tasks</span>
+                                <span><FiUsers size={12} /> {proj.members?.length ?? 0} members</span>
+                                {proj.deadline && <span><FiCalendar size={12} /> {proj.deadline}</span>}
                             </div>
                             <div>
                                 <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: '6px' }}>
@@ -145,7 +146,7 @@ const ProjectsPage = () => {
                     <div className="modal" onClick={(e) => e.stopPropagation()}>
                         <div className="modal-header">
                             <h2 className="modal-title">{editProject ? 'Edit Project' : 'Create New Project'}</h2>
-                            <button className="modal-close" onClick={() => setShowModal(false)}>✕</button>
+                            <button className="modal-close" onClick={() => setShowModal(false)}><FiX /></button>
                         </div>
                         {error && <div className="alert alert-error">{error}</div>}
                         <form onSubmit={handleSubmit}>

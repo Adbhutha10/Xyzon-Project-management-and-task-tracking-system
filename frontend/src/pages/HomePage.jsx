@@ -1,5 +1,11 @@
 import { Link } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import {
+    FiLayout, FiCheckSquare, FiBarChart2, FiUsers,
+    FiArrowRight, FiShield, FiUserPlus, FiFolderPlus,
+} from 'react-icons/fi';
+import { HiOutlineSparkles } from 'react-icons/hi2';
+import { MdOutlineTrackChanges } from 'react-icons/md';
 
 /* ── Typewriter effect ───────────────────────────────────────────── */
 const words = ['productivity', 'collaboration', 'clarity', 'your team'];
@@ -39,8 +45,6 @@ const useFadeIn = (ref) => {
     return visible;
 };
 
-/* ── FadeSection wrapper ─────────────────────────────────────────── */
-import { useRef } from 'react';
 const FadeSection = ({ children, className = '', delay = 0 }) => {
     const ref = useRef(null);
     const visible = useFadeIn(ref);
@@ -58,21 +62,21 @@ const FadeSection = ({ children, className = '', delay = 0 }) => {
 /* ── Data ────────────────────────────────────────────────────────── */
 const features = [
     {
-        icon: '📋',
+        Icon: FiLayout,
         title: 'Plan your projects visually',
         desc: 'Break down any project into tasks, milestones, and dependencies. Get a bird\'s-eye view of everything happening across your team — deadlines, ownership, and status at a glance.',
         highlights: ['Task boards & lists', 'Milestone tracking', 'Deadline management'],
         color: '#EEF2FF',
     },
     {
-        icon: '✅',
+        Icon: FiCheckSquare,
         title: 'Assign tasks with full context',
         desc: 'Give every task a clear owner, priority, and due date. Members see exactly what they need to do next, and admins always know who\'s responsible for what.',
         highlights: ['Priority levels (Low / Medium / High)', 'Task status updates', 'Per-member workload view'],
         color: '#ECFDF5',
     },
     {
-        icon: '📊',
+        Icon: MdOutlineTrackChanges,
         title: 'Track progress in real time',
         desc: 'Your dashboard updates live as team members mark tasks done. Watch completion rates climb and catch bottlenecks before they become blockers.',
         highlights: ['Live completion %', 'Pending & in-progress counts', 'Team productivity overview'],
@@ -102,7 +106,7 @@ const HomePage = () => {
             <nav className="hp-nav">
                 <div className="hp-nav-inner">
                     <div className="home-logo">
-                        <img src="/xyzon-logo.jpeg" alt="Planora" style={{ height: '36px', width: '36px', borderRadius: '8px', objectFit: 'cover' }} />
+                        <img src="/xyzon-logo.jpeg" alt="Planora" style={{ height: '36px', width: '100px', borderRadius: '8px', objectFit: 'cover' }} />
                         <span className="home-logo-text">Planora</span>
                     </div>
                     <div className="hp-nav-links">
@@ -112,8 +116,10 @@ const HomePage = () => {
                     </div>
                     <div className="home-nav-actions">
                         <Link to="/login" className="btn btn-outline btn-sm">Login</Link>
-                        <Link to="/register" className="btn btn-primary btn-sm">Get Started →</Link>
-                        <Link to="/admin/login" className="admin-icon-btn" title="Admin Portal">🔐 Admin</Link>
+                        <Link to="/register" className="btn btn-primary btn-sm">Get Started <FiArrowRight /></Link>
+                        <Link to="/admin/login" className="admin-icon-btn" title="Admin Portal">
+                            <FiShield size={14} /> Admin
+                        </Link>
                     </div>
                 </div>
             </nav>
@@ -121,7 +127,9 @@ const HomePage = () => {
             {/* ── Hero ── */}
             <section className="hp-hero">
                 <div className="hp-hero-content">
-                    <div className="hero-tag">✨ Planora — Project Management & Task Tracking</div>
+                    <div className="hero-tag">
+                        <HiOutlineSparkles /> Planora — Project Management &amp; Task Tracking
+                    </div>
                     <h1 className="hp-hero-h1">
                         Project management<br />
                         built for <span className="hp-typewriter">{typeword}<span className="hp-cursor">|</span></span>
@@ -131,15 +139,13 @@ const HomePage = () => {
                         Keep every team member aligned and every deadline in sight.
                     </p>
                     <div className="hp-hero-ctas">
-                        <Link to="/register" className="btn-hero-primary">Get started for free →</Link>
-                        <Link to="/login" className="btn-hero-outline" style={{ padding: '8px 18px', fontSize: '0.85rem' }}>
-                            Login
-                        </Link>
+                        <Link to="/register" className="btn-hero-primary">Get started for free <FiArrowRight /></Link>
+                        <Link to="/login" className="btn-hero-outline">Member sign in</Link>
                     </div>
                     <div className="hp-hero-trust">
-                        <span>✅ No credit card required</span>
-                        <span>✅ Setup in under 2 minutes</span>
-                        <span>✅ Role-based access</span>
+                        <span><FiCheckSquare size={13} /> No credit card required</span>
+                        <span><FiCheckSquare size={13} /> Setup in under 2 minutes</span>
+                        <span><FiShield size={13} /> Role-based access</span>
                     </div>
                 </div>
 
@@ -153,17 +159,21 @@ const HomePage = () => {
                     </div>
                     <div className="mockup-body">
                         <div className="mockup-stats">
-                            {[['📋', '12', 'Total Tasks'], ['⏳', '4', 'Pending'], ['🔄', '5', 'In Progress'], ['✅', '3', 'Completed']].map(([ic, v, l]) => (
-                                <div className="mockup-stat" key={l}>
-                                    <div style={{ fontSize: '1.1rem', marginBottom: '4px' }}>{ic}</div>
-                                    <div style={{ fontSize: '1.3rem', fontWeight: 800, color: '#0F172A' }}>{v}</div>
-                                    <div style={{ fontSize: '0.7rem', color: '#94A3B8', marginTop: '2px' }}>{l}</div>
+                            {[
+                                { label: 'Total Tasks', value: '12' },
+                                { label: 'Pending', value: '4' },
+                                { label: 'In Progress', value: '5' },
+                                { label: 'Completed', value: '3' },
+                            ].map(({ label, value }) => (
+                                <div className="mockup-stat" key={label}>
+                                    <div style={{ fontSize: '1.3rem', fontWeight: 800, color: '#0F172A' }}>{value}</div>
+                                    <div style={{ fontSize: '0.7rem', color: '#94A3B8', marginTop: '2px' }}>{label}</div>
                                 </div>
                             ))}
                         </div>
                         <div className="mockup-progress-row">
-                            <span style={{ fontSize: '0.75rem', fontWeight: 600, color: '#475569' }}>Team Progress</span>
-                            <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#4F46E5' }}>62%</span>
+                            <span>Team Progress</span>
+                            <span>62%</span>
                         </div>
                         <div className="mockup-pbar"><div className="mockup-pfill" style={{ width: '62%' }}></div></div>
                         <div className="mockup-tasks">
@@ -203,20 +213,20 @@ const HomePage = () => {
                 {features.map((f, i) => (
                     <FadeSection key={f.title} className={`hp-feature-row ${i % 2 === 1 ? 'hp-feature-row-rev' : ''}`} delay={100}>
                         <div className="hp-feature-text">
-                            <div className="hp-feature-icon-big">{f.icon}</div>
+                            <div className="hp-feature-icon-big"><f.Icon size={36} color="var(--primary)" /></div>
                             <h3 className="hp-feature-title">{f.title}</h3>
                             <p className="hp-feature-desc">{f.desc}</p>
                             <ul className="hp-feature-list">
-                                {f.highlights.map((h) => <li key={h}><span className="hp-check">✓</span>{h}</li>)}
+                                {f.highlights.map((h) => <li key={h}><span className="hp-check"><FiCheckSquare size={11} /></span>{h}</li>)}
                             </ul>
                         </div>
                         <div className="hp-feature-visual" style={{ background: f.color }}>
-                            <div style={{ fontSize: '4rem', opacity: 0.15, position: 'absolute', right: 20, bottom: 10 }}>{f.icon}</div>
+                            <div style={{ position: 'absolute', right: 20, bottom: 10, opacity: 0.08 }}><f.Icon size={80} /></div>
                             <div className="hp-feature-card-preview">
                                 <div style={{ fontWeight: 700, fontSize: '0.9rem', marginBottom: '12px', color: '#0F172A' }}>{f.title}</div>
                                 {f.highlights.map((h) => (
                                     <div key={h} className="hp-preview-row">
-                                        <span className="hp-preview-check">✓</span>
+                                        <span className="hp-preview-check"><FiCheckSquare size={12} color="var(--success)" /></span>
                                         <span>{h}</span>
                                     </div>
                                 ))}
@@ -234,13 +244,13 @@ const HomePage = () => {
                 </FadeSection>
                 <div className="hp-steps">
                     {[
-                        { n: 1, icon: '📝', title: 'Register your account', desc: 'Sign up as a member or log in as admin using your credentials.' },
-                        { n: 2, icon: '📁', title: 'Create projects', desc: 'Admin creates projects and assigns team members to each one.' },
-                        { n: 3, icon: '✅', title: 'Assign & track tasks', desc: 'Add tasks with priorities and deadlines, then watch progress live.' },
+                        { n: 1, Icon: FiUserPlus, title: 'Register your account', desc: 'Sign up as a member or log in as admin using your credentials.' },
+                        { n: 2, Icon: FiFolderPlus, title: 'Create projects', desc: 'Admin creates projects and assigns team members to each one.' },
+                        { n: 3, Icon: FiBarChart2, title: 'Assign & track tasks', desc: 'Add tasks with priorities and deadlines, then watch progress live.' },
                     ].map((s, i) => (
                         <FadeSection key={s.n} delay={i * 120}>
                             <div className="hp-step">
-                                <div className="hp-step-icon">{s.icon}</div>
+                                <div className="hp-step-icon"><s.Icon size={28} color="var(--primary)" /></div>
                                 <div className="hp-step-num">{s.n}</div>
                                 <h4 className="hp-step-title">{s.title}</h4>
                                 <p className="hp-step-desc">{s.desc}</p>
@@ -281,8 +291,10 @@ const HomePage = () => {
                     <h2>Ready to manage your team better?</h2>
                     <p>Join your team on Planora and start delivering projects on time.</p>
                     <div className="hp-hero-ctas" style={{ justifyContent: 'center' }}>
-                        <Link to="/register" className="btn-hero-primary">Get Started Free →</Link>
-                        <Link to="/admin/login" className="btn-hero-outline" style={{ borderColor: 'rgba(79,70,229,0.3)', color: '#4F46E5' }}>Admin Login</Link>
+                        <Link to="/register" className="btn-hero-primary">Get Started Free <FiArrowRight /></Link>
+                        <Link to="/admin/login" className="btn-hero-outline" style={{ borderColor: 'rgba(79,70,229,0.3)', color: '#4F46E5' }}>
+                            <FiShield size={14} /> Admin Login
+                        </Link>
                     </div>
                 </section>
             </FadeSection>
@@ -290,7 +302,7 @@ const HomePage = () => {
             {/* ── Footer ── */}
             <footer className="home-footer">
                 <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-                    <div className="home-logo-icon" style={{ width: 24, height: 24, fontSize: '0.7rem', borderRadius: '6px' }}>🚀</div>
+                    <img src="/xyzon-logo.jpeg" alt="Planora" style={{ height: '20px', width: '55px', borderRadius: '4px', objectFit: 'cover' }} />
                     <span style={{ fontWeight: 700, color: '#475569', fontSize: '0.88rem' }}>Planora</span>
                 </div>
                 <p>© 2026 Planora. Built by Beere Adbhutha.</p>
