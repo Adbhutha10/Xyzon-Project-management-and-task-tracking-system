@@ -30,14 +30,14 @@ const LoginPage = () => {
     return (
         <div className="auth-page">
             <div className="auth-left">
-                <h2>Manage your team with clarity and speed.</h2>
+                <h2>Planora — Project Management & Task Tracking</h2>
                 <p>Assign tasks, track progress, and keep every project on time — all in one place.</p>
             </div>
             <div className="auth-right">
                 <div className="auth-card">
                     <div className="auth-logo-wrap">
                         <div className="auth-logo-icon">🚀</div>
-                        <span className="auth-logo-name">Xyzon PM</span>
+                        <span className="auth-logo-name">Planora</span>
                     </div>
                     <h1 className="auth-title">Welcome back</h1>
                     <p className="auth-subtitle">Sign in to your member account</p>

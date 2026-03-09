@@ -103,7 +103,7 @@ const HomePage = () => {
                 <div className="hp-nav-inner">
                     <div className="home-logo">
                         <div className="home-logo-icon">🚀</div>
-                        <span className="home-logo-text">Xyzon PM</span>
+                        <span className="home-logo-text">Planora</span>
                     </div>
                     <div className="hp-nav-links">
                         <a href="#features" className="hp-nav-link">Features</a>
@@ -121,7 +121,7 @@ const HomePage = () => {
             {/* ── Hero ── */}
             <section className="hp-hero">
                 <div className="hp-hero-content">
-                    <div className="hero-tag">✨ Built for modern teams</div>
+                    <div className="hero-tag">✨ Planora — Project Management & Task Tracking</div>
                     <h1 className="hp-hero-h1">
                         Project management<br />
                         built for <span className="hp-typewriter">{typeword}<span className="hp-cursor">|</span></span>
@@ -132,7 +132,9 @@ const HomePage = () => {
                     </p>
                     <div className="hp-hero-ctas">
                         <Link to="/register" className="btn-hero-primary">Get started for free →</Link>
-                        <Link to="/login" className="btn-hero-outline">Member sign in</Link>
+                        <Link to="/login" className="btn-hero-outline" style={{ padding: '8px 18px', fontSize: '0.85rem' }}>
+                            Login
+                        </Link>
                     </div>
                     <div className="hp-hero-trust">
                         <span>✅ No credit card required</span>
@@ -147,7 +149,7 @@ const HomePage = () => {
                         <span className="mockup-dot red"></span>
                         <span className="mockup-dot yellow"></span>
                         <span className="mockup-dot green"></span>
-                        <span style={{ marginLeft: 'auto', fontSize: '0.7rem', color: '#94A3B8' }}>Xyzon PM — Dashboard</span>
+                        <span style={{ marginLeft: 'auto', fontSize: '0.7rem', color: '#94A3B8' }}>Planora — Dashboard</span>
                     </div>
                     <div className="mockup-body">
                         <div className="mockup-stats">
@@ -277,7 +279,7 @@ const HomePage = () => {
             <FadeSection>
                 <section className="hp-cta-banner">
                     <h2>Ready to manage your team better?</h2>
-                    <p>Join your team on Xyzon PM and start delivering projects on time.</p>
+                    <p>Join your team on Planora and start delivering projects on time.</p>
                     <div className="hp-hero-ctas" style={{ justifyContent: 'center' }}>
                         <Link to="/register" className="btn-hero-primary">Get Started Free →</Link>
                         <Link to="/admin/login" className="btn-hero-outline" style={{ borderColor: 'rgba(79,70,229,0.3)', color: '#4F46E5' }}>Admin Login</Link>
@@ -289,9 +291,9 @@ const HomePage = () => {
             <footer className="home-footer">
                 <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
                     <div className="home-logo-icon" style={{ width: 24, height: 24, fontSize: '0.7rem', borderRadius: '6px' }}>🚀</div>
-                    <span style={{ fontWeight: 700, color: '#475569', fontSize: '0.88rem' }}>Xyzon PM</span>
+                    <span style={{ fontWeight: 700, color: '#475569', fontSize: '0.88rem' }}>Planora</span>
                 </div>
-                <p>© 2024 Xyzon PM · Built for teams that ship.</p>
+                <p>© 2026 Planora. Built by Beere Adbhutha.</p>
             </footer>
         </div>
     );

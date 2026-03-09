@@ -30,8 +30,8 @@ const Sidebar = () => {
             <div className="sidebar-brand">
                 <div className="brand-icon">🚀</div>
                 <div>
-                    <div className="brand-name">Xyzon PM</div>
-                    <div className="brand-sub">Project Management</div>
+                    <div className="brand-name">Planora</div>
+                    <div className="brand-sub">Project Management & Task Tracking</div>
                 </div>
             </div>
 

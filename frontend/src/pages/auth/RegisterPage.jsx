@@ -36,14 +36,14 @@ const RegisterPage = () => {
     return (
         <div className="auth-page">
             <div className="auth-left">
-                <h2>Join your team on Xyzon PM.</h2>
+                <h2>Join your team on Planora.</h2>
                 <p>Get assigned tasks, track your progress, and collaborate with your team effortlessly.</p>
             </div>
             <div className="auth-right">
                 <div className="auth-card">
                     <div className="auth-logo-wrap">
                         <div className="auth-logo-icon">✨</div>
-                        <span className="auth-logo-name">Xyzon PM</span>
+                        <span className="auth-logo-name">Planora</span>
                     </div>
                     <h1 className="auth-title">Create account</h1>
                     <p className="auth-subtitle">Register as a team member</p>
