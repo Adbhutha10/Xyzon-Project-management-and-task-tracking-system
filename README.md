@@ -94,11 +94,7 @@ Open [http://localhost:5173](http://localhost:5173) in your browser.
 
 ---
 
-## 🛡️ Default Credentials (Admin)
 
-| Email | Password |
-|---|---|
-| `admin@pm.com` | `Admin@123` |
 
 ---
 

@@ -84,11 +84,9 @@ const AdminLoginPage = () => {
                     <h1 className="auth-zoho-title">Admin Sign In</h1>
                     <p className="auth-zoho-subtitle">Control Centre Access — Authorized Only</p>
 
-                    <div className="alert" style={{ background: '#f8fafc', color: '#475569', border: '1px solid #e2e8f0', fontSize: '0.82rem', padding: '10px', borderRadius: '4px', marginBottom: '20px' }}>
-                        🛡️ Default: <strong>admin@pm.com</strong> / <strong>Admin@123</strong>
-                    </div>
 
-                    {error && <div className="alert alert-error" style={{ marginBottom: '20px' }}>⚠️ {error}</div>}
+
+                    {error && <div className="alert alert-error" style={{ marginBottom: '20px' }}>{error}</div>}
 
                     <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column' }}>
                         <input
