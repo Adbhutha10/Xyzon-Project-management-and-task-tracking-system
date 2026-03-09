@@ -102,7 +102,7 @@ const HomePage = () => {
             <nav className="hp-nav">
                 <div className="hp-nav-inner">
                     <div className="home-logo">
-                        <div className="home-logo-icon">🚀</div>
+                        <img src="/xyzon-logo.jpeg" alt="Planora" style={{ height: '36px', width: '36px', borderRadius: '8px', objectFit: 'cover' }} />
                         <span className="home-logo-text">Planora</span>
                     </div>
                     <div className="hp-nav-links">
