@@ -190,7 +190,7 @@ const RegisterPage = () => {
                 </div>
             </div>
 
-            <p style={{ position: 'absolute', bottom: '20px', fontSize: '0.8rem', color: '#999' }}>
+            <p className="auth-zoho-copyright-footer">
                 © 2026, Planora Projects. All Rights Reserved.
             </p>
         </div>

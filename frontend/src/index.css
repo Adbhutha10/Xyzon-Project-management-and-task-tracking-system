@@ -2107,6 +2107,19 @@ tbody tr:hover {
   justify-content: center;
   padding: 40px 20px;
   font-family: 'Inter', sans-serif;
+  position: relative;
+}
+
+.auth-zoho-copyright-footer {
+  position: absolute;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 0.8rem;
+  color: #666;
+  text-align: center;
+  width: 100%;
+  pointer-events: none;
 }
 
 .auth-card-zoho {
