@@ -76,24 +76,25 @@ const AdminLoginPage = () => {
                     <div className="auth-zoho-logo" style={{ display: 'flex', alignItems: 'center', marginBottom: '40px' }}>
                         <img src="/xyzon-logo.jpeg" alt="Planora Admin" style={{ height: '32px', width: 'auto', objectFit: 'contain' }} />
                         <div style={{ marginLeft: '12px', paddingLeft: '12px', borderLeft: '1px solid #eee' }}>
-                            <span style={{ fontSize: '0.75rem', fontWeight: 800, color: '#4338CA', letterSpacing: '0.05em' }}>ADMIN PORTAL</span>
+                            {/* Logo Spacer */}
                         </div>
                     </div>
 
                     <div style={{ marginBottom: '32px' }}>
-                        <div style={{
-                            width: '48px',
-                            height: '48px',
-                            background: '#eef2ff',
-                            borderRadius: '12px',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            marginBottom: '20px'
-                        }}>
-                            <FiLock size={24} color="#4338CA" />
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '12px' }}>
+                            <div style={{
+                                width: '42px',
+                                height: '42px',
+                                background: '#eef2ff',
+                                borderRadius: '10px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                            }}>
+                                <FiLock size={20} color="#4338CA" />
+                            </div>
+                            <h1 className="auth-zoho-title" style={{ margin: 0 }}>Admin Sign In</h1>
                         </div>
-                        <h1 className="auth-zoho-title" style={{ marginBottom: '8px' }}>Admin Sign In</h1>
                         <p className="auth-zoho-subtitle" style={{ fontSize: '0.95rem', color: '#64748b' }}>Authorized access to Planora control center</p>
                     </div>
 
