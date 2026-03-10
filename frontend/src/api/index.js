@@ -2,7 +2,8 @@ import axios from 'axios';
 
 const getBaseURL = () => {
     const url = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
-    return url.endsWith('/api') ? url : `${url.replace(/\/$/, '')}/api`;
+    const baseUrl = url.endsWith('/api') || url.endsWith('/api/') ? url : `${url.replace(/\/$/, '')}/api`;
+    return baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`;
 };
 
 const api = axios.create({
@@ -31,35 +32,35 @@ api.interceptors.response.use(
 );
 
 // ── Auth ─────────────────────────────────────────────────────────────
-export const registerUser = (data) => api.post('/auth/register', data);
-export const loginUser = (data) => api.post('/auth/login', data);
-export const getMe = () => api.get('/auth/me');
+export const registerUser = (data) => api.post('auth/register', data);
+export const loginUser = (data) => api.post('auth/login', data);
+export const getMe = () => api.get('auth/me');
 
 // ── Projects ─────────────────────────────────────────────────────────
-export const getProjects = () => api.get('/projects');
-export const getProject = (id) => api.get(`/projects/${id}`);
-export const createProject = (data) => api.post('/projects', data);
-export const updateProject = (id, data) => api.put(`/projects/${id}`, data);
-export const deleteProject = (id) => api.delete(`/projects/${id}`);
-export const addProjectMembers = (id, data) => api.post(`/projects/${id}/members`, data);
+export const getProjects = () => api.get('projects');
+export const getProject = (id) => api.get(`projects/${id}`);
+export const createProject = (data) => api.post('projects', data);
+export const updateProject = (id, data) => api.put(`projects/${id}`, data);
+export const deleteProject = (id) => api.delete(`projects/${id}`);
+export const addProjectMembers = (id, data) => api.post(`projects/${id}/members`, data);
 
 // ── Tasks ─────────────────────────────────────────────────────────────
-export const getTasks = () => api.get('/tasks');
-export const getTask = (id) => api.get(`/tasks/${id}`);
-export const createTask = (data) => api.post('/tasks', data);
-export const updateTask = (id, data) => api.put(`/tasks/${id}`, data);
-export const updateStatus = (id, data) => api.patch(`/tasks/${id}/status`, data);
-export const deleteTask = (id) => api.delete(`/tasks/${id}`);
+export const getTasks = () => api.get('tasks');
+export const getTask = (id) => api.get(`tasks/${id}`);
+export const createTask = (data) => api.post('tasks', data);
+export const updateTask = (id, data) => api.put(`tasks/${id}`, data);
+export const updateStatus = (id, data) => api.patch(`tasks/${id}/status`, data);
+export const deleteTask = (id) => api.delete(`tasks/${id}`);
 
 // ── Users ─────────────────────────────────────────────────────────────
-export const getUsers = () => api.get('/users');
-export const deleteUser = (id) => api.delete(`/users/${id}`);
+export const getUsers = () => api.get('users');
+export const deleteUser = (id) => api.delete(`users/${id}`);
 
 // ── Dashboard ─────────────────────────────────────────────────────────
-export const getDashboard = () => api.get('/dashboard');
+export const getDashboard = () => api.get('dashboard');
 
 // ── Notifications ────────────────────────────────────────────────────
-export const getNotifications = () => api.get('/notifications');
-export const markNotificationsRead = () => api.put('/notifications/read-all');
+export const getNotifications = () => api.get('notifications');
+export const markNotificationsRead = () => api.put('notifications/read-all');
 
 export default api;
