@@ -91,6 +91,7 @@ body {
   color: var(--text-primary);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
 
 /* ── Spinner ─────────────────────────────────────────────────────────── */
@@ -147,6 +148,83 @@ body {
   top: 0;
   height: 100vh;
   box-shadow: var(--shadow-xs);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), background 0.2s ease;
+  z-index: 200;
+}
+
+/* Mobile backdrop */
+.sidebar-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.4);
+  backdrop-filter: blur(4px);
+  z-index: 150;
+  animation: fadeIn 0.2s ease;
+}
+
+/* Mobile Header */
+.mobile-header {
+  display: none;
+  position: sticky;
+  top: 0;
+  width: 100%;
+  height: 60px;
+  background: var(--card-bg);
+  border-bottom: 1px solid var(--border);
+  padding: 0 20px;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 100;
+  box-shadow: var(--shadow-xs);
+}
+
+.mobile-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.mobile-logo {
+  height: 32px;
+  width: auto;
+  border-radius: 8px;
+}
+
+.mobile-brand-name {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.menu-toggle {
+  background: none;
+  border: none;
+  color: var(--text-primary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+
+.menu-toggle:hover {
+  background: var(--bg-2);
+}
+
+.sidebar-close-btn {
+  display: none;
+  background: var(--bg-2);
+  border: none;
+  color: var(--text-muted);
+  padding: 6px;
+  border-radius: 6px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
 }
 
 .sidebar-brand {
@@ -1613,40 +1691,78 @@ tbody tr:hover {
 }
 
 /* ── Responsive ──────────────────────────────────────────────────────── */
-@media (min-width: 960px) {
-  .auth-left {
+@media (max-width: 1024px) {
+  .sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    transform: translateX(-100%);
+  }
+
+  .sidebar-open {
+    transform: translateX(0);
+  }
+
+  .mobile-header {
     display: flex;
   }
 
-  .auth-page {
-    justify-content: unset;
+  .sidebar-close-btn {
+    display: flex;
   }
 
-  .auth-right {
-    max-width: 420px;
+  .main-content {
+    padding: 24px 20px;
   }
 }
 
 @media (max-width: 768px) {
-  .sidebar {
-    width: 220px;
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 
-  .main-content {
-    padding: 20px;
+  .hp-hero {
+    grid-template-columns: 1fr;
+    text-align: center;
+    padding-top: 40px;
   }
 
-  .home-nav {
-    padding: 14px 20px;
+  .hp-feature-row {
+    grid-template-columns: 1fr;
+    gap: 30px;
   }
 
-  .hero {
-    padding: 60px 20px 48px;
+  .auth-card-zoho {
+    grid-template-columns: 1fr;
+    max-width: 450px;
   }
 
-  .features,
-  .steps {
-    padding: 36px 20px;
+  .auth-right-zoho {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .page-header {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .search-filter-bar {
+    flex-direction: column;
+  }
+
+  .search-input-wrap {
+    max-width: none;
   }
 }
 
@@ -1655,6 +1771,7 @@ tbody tr:hover {
   min-height: 100vh;
   background: #FAFBFF;
   color: var(--text-primary);
+  overflow-x: hidden;
 }
 
 /* Navbar */
@@ -2253,11 +2370,45 @@ tbody tr:hover {
   }
 
   .hp-nav-inner {
-    padding: 0 20px;
+    padding: 0 16px;
+    gap: 12px;
+  }
+
+  .home-nav-actions {
+    gap: 6px;
+  }
+
+  .home-nav-actions .btn {
+    padding: 6px 10px;
+    font-size: 0.75rem;
+  }
+
+  .admin-icon-btn span,
+  .admin-icon-btn b,
+  .admin-icon-btn {
+    display: flex;
+  }
+
+  /* Hide Admin text on mobile to save space */
+  .admin-icon-btn {
+    padding: 7px;
+  }
+
+  .admin-icon-btn {
+    font-size: 0;
+  }
+
+  .admin-icon-btn svg {
+    margin: 0;
   }
 
   .hp-nav-links {
     display: none;
+  }
+
+  .hp-hero-h1 {
+    font-size: 1.8rem;
+    word-break: break-word;
   }
 }
 

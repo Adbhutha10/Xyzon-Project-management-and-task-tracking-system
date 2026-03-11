@@ -18,7 +18,7 @@ const memberLinks = [
     { to: '/tasks', Icon: FiCheckSquare, label: 'My Tasks' },
 ];
 
-const Sidebar = () => {
+const Sidebar = ({ isOpen, onClose }) => {
     const { user, isAdmin, logout } = useAuth();
     const { isDarkMode, toggleTheme } = useTheme();
     const navigate = useNavigate();
@@ -30,55 +30,61 @@ const Sidebar = () => {
     };
 
     return (
-        <aside className="sidebar">
-            {/* Brand */}
-            <div className="sidebar-brand">
-                <div className="brand-logo-wrap">
-                    <img src="/xyzon-logo.jpeg" alt="Xyzon Innovations" />
+        <>
+            <aside className={`sidebar ${isOpen ? 'sidebar-open' : ''}`}>
+                {/* Brand */}
+                <div className="sidebar-brand">
+                    <div className="brand-logo-wrap">
+                        <img src="/xyzon-logo.jpeg" alt="Xyzon Innovations" />
+                    </div>
+                    <div className="brand-details">
+                        <div className="brand-name">Planora</div>
+                        <div className="brand-sub">Project Management &amp; Task Tracking</div>
+                    </div>
+                    <button className="sidebar-close-btn" onClick={onClose} aria-label="Close Menu">
+                        <FiLogOut style={{ transform: 'rotate(180deg)' }} />
+                    </button>
                 </div>
-                <div className="brand-details">
-                    <div className="brand-name">Planora</div>
-                    <div className="brand-sub">Project Management &amp; Task Tracking</div>
+
+                {/* User info */}
+                <div className="sidebar-user">
+                    <div className="user-avatar">{user?.name?.charAt(0).toUpperCase()}</div>
+                    <div className="user-info">
+                        <span className="user-name">{user?.name}</span>
+                        <span className={`role-badge ${isAdmin ? 'role-admin' : 'role-member'}`}>
+                            {isAdmin ? 'Admin' : 'Member'}
+                        </span>
+                    </div>
                 </div>
-            </div>
 
-            {/* User info */}
-            <div className="sidebar-user">
-                <div className="user-avatar">{user?.name?.charAt(0).toUpperCase()}</div>
-                <div className="user-info">
-                    <span className="user-name">{user?.name}</span>
-                    <span className={`role-badge ${isAdmin ? 'role-admin' : 'role-member'}`}>
-                        {isAdmin ? 'Admin' : 'Member'}
-                    </span>
+                {/* Navigation */}
+                <nav className="sidebar-nav">
+                    <div className="sidebar-section-label">Navigation</div>
+                    {links.map((link) => (
+                        <NavLink
+                            key={link.to}
+                            to={link.to}
+                            onClick={onClose}
+                            className={({ isActive }) => `nav-link ${isActive ? 'nav-link-active' : ''}`}
+                        >
+                            <link.Icon size={16} className="nav-icon" />
+                            <span>{link.label}</span>
+                        </NavLink>
+                    ))}
+                </nav>
+
+                {/* Footer */}
+                <div className="sidebar-footer">
+                    <button className="theme-toggle-btn" onClick={toggleTheme} title="Toggle Theme">
+                        {isDarkMode ? <FiSun size={16} /> : <FiMoon size={16} />}
+                        <span>{isDarkMode ? 'Light Mode' : 'Dark Mode'}</span>
+                    </button>
+                    <button className="sidebar-logout" onClick={handleLogout}>
+                        <FiLogOut size={15} /> Sign Out
+                    </button>
                 </div>
-            </div>
-
-            {/* Navigation */}
-            <nav className="sidebar-nav">
-                <div className="sidebar-section-label">Navigation</div>
-                {links.map((link) => (
-                    <NavLink
-                        key={link.to}
-                        to={link.to}
-                        className={({ isActive }) => `nav-link ${isActive ? 'nav-link-active' : ''}`}
-                    >
-                        <link.Icon size={16} className="nav-icon" />
-                        <span>{link.label}</span>
-                    </NavLink>
-                ))}
-            </nav>
-
-            {/* Footer */}
-            <div className="sidebar-footer">
-                <button className="theme-toggle-btn" onClick={toggleTheme} title="Toggle Theme">
-                    {isDarkMode ? <FiSun size={16} /> : <FiMoon size={16} />}
-                    <span>{isDarkMode ? 'Light Mode' : 'Dark Mode'}</span>
-                </button>
-                <button className="sidebar-logout" onClick={handleLogout}>
-                    <FiLogOut size={15} /> Sign Out
-                </button>
-            </div>
-        </aside>
+            </aside>
+        </>
     );
 };
 
